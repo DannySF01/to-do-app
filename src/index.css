@@ -1,5 +1,55 @@
 @import "tailwindcss";
 
-body {
-    @apply bg-gray-50;
+@theme {
+  --color-background: oklch(var(--background));
+  --color-foreground: oklch(var(--foreground));
+  --color-surface: oklch(var(--surface));
+  --color-muted: oklch(var(--muted));
+  --color-border: oklch(var(--border));
+  --color-primary: oklch(var(--primary));
+}
+
+:root {
+  --background: 98% 0 0;
+  --foreground: 15% 0 0;
+  --surface: 100% 0 0;
+  --muted: 65% 0 0;
+  --border: 90% 0 0;
+  --primary: 55% 0.22 265;
+}
+
+.dark {
+  --background: 12% 0 0;
+  --foreground: 96% 0 0;
+  --surface: 16% 0 0;
+  --muted: 70% 0 0;
+  --border: 28% 0 0;
+  --primary: 65% 0.22 265;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased transition-colors duration-300 ease-in-out;
+  }
+}
+
+@layer components {
+  .input {
+    @apply w-full px-3 py-2 text-sm border border-border bg-transparent outline-none rounded-xl 
+           transition-all duration-200 ease-out focus:border-primary focus:ring-2 focus:ring-primary/10;
+  }
+
+  .btn {
+    @apply flex items-center justify-center rounded-xl font-medium 
+           transition-all duration-200 active:scale-[0.96] cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-[oklch(100%_0_0)] hover:brightness-110 shadow-sm hover:shadow-primary/20;
+  }
+
+  .card {
+    @apply border border-border bg-surface rounded-xl 
+           transition-all duration-200 ease-in-out hover:border-muted/30 hover:shadow-sm;
+  }
 }

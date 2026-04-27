@@ -4,11 +4,15 @@ import { Trash2, Moon, Sun, ListChecks, MonitorDown } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
 import { useTheme } from "./hooks/useTheme";
 import { usePWA } from "./hooks/usePWA";
+import TaskItem from "./components/TaskItem";
 
 export default function App() {
   const { tasks, addTask, toggleTask, removeTask } = useTasks();
   const { theme, toggleTheme } = useTheme();
   const { isInstallable, install } = usePWA();
+
+  const pendingTasks = tasks.filter((t) => !t.done);
+  const completedTasks = tasks.filter((t) => t.done);
 
   const [input, setInput] = useState("");
   const [due, setDue] = useState("");
@@ -70,67 +74,50 @@ export default function App() {
           New Task
         </button>
 
-        <div className="space-y-2">
+        <div className="space-y-6">
           <AnimatePresence mode="popLayout">
             {tasks.length === 0 ? (
               <motion.div
                 key="empty"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="flex flex-col items-center justify-center py-10 text-center text-muted"
+                className="flex flex-col items-center justify-center py-10 text-muted"
               >
-                <div className="mb-3 opacity-70">
-                  <ListChecks size={28} />
-                </div>
-
+                <ListChecks size={28} className="mb-2 opacity-50" />
                 <p className="text-sm">No tasks yet</p>
               </motion.div>
             ) : (
-              tasks.map((task) => (
-                <motion.div
-                  key={task.id}
-                  layout
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  onClick={() => toggleTask(task.id)}
-                  className="card flex items-center justify-between p-3 hover:brightness-110 transition"
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={task.done}
-                      onChange={(e) => e.stopPropagation()}
-                      className="h-4 w-4 rounded border-muted accent-primary"
+              <>
+                <div className="space-y-2">
+                  {pendingTasks.map((task) => (
+                    <TaskItem
+                      key={task.id}
+                      task={task}
+                      onToggle={toggleTask}
+                      onRemove={removeTask}
                     />
+                  ))}
+                </div>
 
-                    <div className="space-y-1">
-                      <p
-                        className={`text-sm ${
-                          task.done ? "line-through text-muted" : ""
-                        }`}
-                      >
-                        {task.text}
-                      </p>
-
-                      {task.due && (
-                        <p className="text-[11px] text-muted">
-                          {new Date(task.due).toLocaleString()}
-                        </p>
-                      )}
+                {completedTasks.length > 0 && (
+                  <div className="space-y-2 pt-4">
+                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted px-1">
+                      Done — {completedTasks.length}
+                    </h3>
+                    <div className="space-y-2 opacity-80">
+                      {completedTasks.map((task) => (
+                        <TaskItem
+                          key={task.id}
+                          task={task}
+                          onToggle={toggleTask}
+                          onRemove={removeTask}
+                        />
+                      ))}
                     </div>
                   </div>
-
-                  <button
-                    onClick={() => removeTask(task.id)}
-                    className="text-muted hover:text-red-500 transition-colors duration-200"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </motion.div>
-              ))
+                )}
+              </>
             )}
           </AnimatePresence>
         </div>
@@ -170,17 +157,17 @@ export default function App() {
                 className="input"
               />
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 ">
                 <button
                   onClick={handleAdd}
                   disabled={!input.trim()}
-                  className="btn btn-primary flex-1 disabled:opacity-50"
+                  className="btn btn-primary flex-1 disabled:opacity-50 py-2"
                 >
                   Add
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
-                  className="btn flex-1"
+                  className="btn flex-1 py-2"
                 >
                   Cancel
                 </button>

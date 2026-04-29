@@ -20,5 +20,8 @@ export function usePWA() {
     if (outcome === "accepted") setInstallPrompt(null);
   };
 
-  return { isInstallable: !!installPrompt, install };
+  return {
+    isInstallable: !!installPrompt,
+    install,
+  };
 }

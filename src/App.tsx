@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Moon, Sun, ListChecks, MonitorDown } from "lucide-react";
+import { Moon, Sun, ListChecks, MonitorDown } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
 import { useTheme } from "./hooks/useTheme";
 import { usePWA } from "./hooks/usePWA";
 import TaskItem from "./components/TaskItem";
+import { useNotifications } from "./hooks/useNotifications";
 
 export default function App() {
   const { tasks, addTask, toggleTask, removeTask } = useTasks();
   const { theme, toggleTheme } = useTheme();
   const { isInstallable, install } = usePWA();
+  const { requestPermission, sendSystemNotification } = useNotifications();
 
   const pendingTasks = tasks.filter((t) => !t.done);
   const completedTasks = tasks.filter((t) => t.done);
@@ -26,6 +28,7 @@ export default function App() {
     setInput("");
     setDue("");
     setShowModal(false);
+    requestPermission();
   };
 
   useEffect(() => {
@@ -43,6 +46,27 @@ export default function App() {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
   }, [showModal]);
+
+  useEffect(() => {
+    const checkInterval = setInterval(() => {
+      const now = new Date();
+
+      tasks.forEach((task) => {
+        if (task.due && !task.done) {
+          const dueDate = new Date(task.due);
+
+          if (
+            dueDate.getTime() <= now.getTime() &&
+            dueDate.getTime() > now.getTime() - 60000
+          ) {
+            sendSystemNotification("Tarefa Pendente!", task.text);
+          }
+        }
+      });
+    }, 60000);
+
+    return () => clearInterval(checkInterval);
+  }, [tasks]);
 
   return (
     <div className="min-h-screen flex justify-center px-4 py-10">

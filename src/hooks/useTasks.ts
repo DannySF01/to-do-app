@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Task } from "../types/types";
+import type { Task, TFilters } from "../types/types";
 
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>(() => {
@@ -15,13 +15,17 @@ export function useTasks() {
     if (!text.trim()) return;
     setTasks((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), text, done: false, due },
+      { id: crypto.randomUUID(), text, status: "active", due },
     ]);
   };
 
   const toggleTask = (id: string) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
+      prev.map((t) =>
+        t.id === id
+          ? { ...t, status: t.status === "active" ? "completed" : "active" }
+          : t,
+      ),
     );
   };
 
@@ -29,5 +33,24 @@ export function useTasks() {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  return { tasks, addTask, toggleTask, removeTask };
+  const clearCompleted = () => {
+    setTasks((prev) => prev.filter((t) => t.status !== "completed"));
+  };
+
+  const getFilteredTasks = (filter: TFilters): Task[] => {
+    return tasks.filter((t) => {
+      if (filter === "all") return t;
+      if (filter === "active") return t.status === "active";
+      if (filter === "completed") return t.status === "completed";
+    });
+  };
+
+  return {
+    tasks,
+    addTask,
+    toggleTask,
+    removeTask,
+    clearCompleted,
+    getFilteredTasks,
+  };
 }

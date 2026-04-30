@@ -1,12 +1,13 @@
 import { Trash2 } from "lucide-react";
 import { motion } from "motion/react";
+import type { Task } from "../types/types";
 
 export default function TaskItem({
   task,
   onToggle,
   onRemove,
 }: {
-  task: any;
+  task: Task;
   onToggle: any;
   onRemove: any;
 }) {
@@ -23,13 +24,13 @@ export default function TaskItem({
       <div className="flex items-center gap-3">
         <input
           type="checkbox"
-          checked={task.done}
+          checked={task.status === "completed"}
           readOnly
           className="h-4 w-4 rounded border-muted accent-primary cursor-pointer"
         />
         <div className="space-y-0.5">
           <p
-            className={`text-sm transition-all ${task.done ? "line-through text-muted" : "text-foreground"}`}
+            className={`text-sm transition-all ${task.status === "completed" ? "line-through text-muted" : "text-foreground"}`}
           >
             {task.text}
           </p>

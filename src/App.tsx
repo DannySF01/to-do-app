@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon, Sun, ListChecks, MonitorDown } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
@@ -6,19 +6,27 @@ import { useTheme } from "./hooks/useTheme";
 import { usePWA } from "./hooks/usePWA";
 import TaskItem from "./components/TaskItem";
 import { useNotifications } from "./hooks/useNotifications";
+import type { TFilters } from "./types/types";
 
 export default function App() {
-  const { tasks, addTask, toggleTask, removeTask } = useTasks();
+  const { tasks, addTask, toggleTask, removeTask, getFilteredTasks } =
+    useTasks();
   const { theme, toggleTheme } = useTheme();
   const { isInstallable, install } = usePWA();
   const { requestPermission, sendSystemNotification } = useNotifications();
 
-  const pendingTasks = tasks.filter((t) => !t.done);
-  const completedTasks = tasks.filter((t) => t.done);
-
   const [input, setInput] = useState("");
   const [due, setDue] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [filter, setFilter] = useState<TFilters>("all");
+
+  const filteredTasks = useMemo(
+    () => getFilteredTasks(filter),
+    [tasks, filter],
+  );
+
+  const activeTasks = filteredTasks.filter((t) => t.status === "active");
+  const completedTasks = filteredTasks.filter((t) => t.status === "completed");
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -52,7 +60,7 @@ export default function App() {
       const now = new Date();
 
       tasks.forEach((task) => {
-        if (task.due && !task.done) {
+        if (task.due && task.status === "completed") {
           const dueDate = new Date(task.due);
 
           if (
@@ -98,55 +106,94 @@ export default function App() {
           New Task
         </button>
 
+        <div className="space-y-3">
+          <div className="flex gap-1 p-1 bg-surface border border-border rounded-xl">
+            {["all", "active", "completed"].map((f) => (
+              <button
+                key={f}
+                onClick={() => setFilter(f as TFilters)}
+                className={`flex-1 py-1.5 text-xs font-medium rounded-lg capitalize transition-all ${
+                  filter === f
+                    ? "bg-primary text-[oklch(100%_0_0)] shadow-sm"
+                    : "text-muted hover:text-foreground"
+                }`}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="space-y-6">
           <AnimatePresence mode="popLayout">
-            {tasks.length === 0 ? (
+            {filteredTasks.length === 0 ? (
               <motion.div
                 key="empty"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col items-center justify-center py-10 text-muted"
+                className="flex flex-col items-center py-12 text-muted"
               >
-                <ListChecks size={28} className="mb-2 opacity-50" />
-                <p className="text-sm">No tasks yet</p>
+                <ListChecks size={32} className="mb-2 opacity-20" />
+                <p className="text-sm">
+                  No {filter !== "all" ? filter : ""} tasks
+                </p>
               </motion.div>
             ) : (
-              <>
-                <div className="space-y-2">
-                  {pendingTasks.map((task) => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      onToggle={toggleTask}
-                      onRemove={removeTask}
-                    />
-                  ))}
-                </div>
-
-                {completedTasks.length > 0 && (
-                  <div className="space-y-2 pt-4">
-                    <h3 className="text-xs font-semibold uppercase tracking-wider text-muted px-1">
-                      Done — {completedTasks.length}
+              <div className="space-y-6">
+                {activeTasks.length > 0 && (
+                  <motion.div
+                    key="active"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="space-y-2"
+                  >
+                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">
+                      Active — {activeTasks.length}
                     </h3>
-                    <div className="space-y-2 opacity-80">
-                      {completedTasks.map((task) => (
-                        <TaskItem
-                          key={task.id}
-                          task={task}
-                          onToggle={toggleTask}
-                          onRemove={removeTask}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                    {activeTasks.map((task) => (
+                      <TaskItem
+                        key={task.id}
+                        task={task}
+                        onToggle={toggleTask}
+                        onRemove={removeTask}
+                      />
+                    ))}
+                  </motion.div>
                 )}
-              </>
+
+                {completedTasks.length > 0 &&
+                  (filter === "all" || filter === "completed") && (
+                    <motion.div
+                      key="completed"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="space-y-2"
+                    >
+                      {filter === "all" && activeTasks.length > 0 && (
+                        <div className="h-px bg-border/50 my-4" />
+                      )}
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-muted px-1">
+                        Completed — {completedTasks.length}
+                      </h3>
+                      <div className="space-y-2 opacity-70">
+                        {completedTasks.map((task) => (
+                          <TaskItem
+                            key={task.id}
+                            task={task}
+                            onToggle={toggleTask}
+                            onRemove={removeTask}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+              </div>
             )}
           </AnimatePresence>
         </div>
       </div>
-
       <AnimatePresence>
         {showModal && (
           <motion.div

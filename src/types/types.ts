@@ -3,6 +3,8 @@ export type Theme = "dark" | "light";
 export interface Task {
   id: string;
   text: string;
-  done: boolean;
+  status: "active" | "completed";
   due?: string;
 }
+
+export type TFilters = "all" | "active" | "completed";

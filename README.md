@@ -1,73 +1,114 @@
-# React + TypeScript + Vite
+# ✅ To-Do App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma aplicação web moderna de **gestão de tarefas**, focada em simplicidade, fluidez e uma experiência de utilizador agradável. Permite criar, concluir e remover tarefas de forma intuitiva, com um design minimalista e animações suaves.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🎯 Funcionalidades
 
-## React Compiler
+- ➕ Adicionar novas tarefas através de um modal
+- ✅ Marcar tarefas como concluídas (checkbox)
+- 🗑️ Remover tarefas
+- 🕒 Definir data e hora (opcional) para cada tarefa
+- 🌙 Alternar entre modo claro e escuro
+- ✨ Animações suaves com transições (Framer Motion)
+- 📭 Estado vazio com feedback visual quando não existem tarefas
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠️ Tecnologias Utilizadas
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Este projeto foi desenvolvido com:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Framework:** React
+- **Linguagem:** TypeScript
+- **Estilização:** Tailwind CSS
+- **Animações:** Framer Motion
+- **Ícones:** Lucide React
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📂 Estrutura do Projeto
+
+```text
+/to-do-app
+  /public            # Assets estáticos
+
+  /src               # Pasta principal
+    /components         # Componentes reutilizáveis
+    /hooks              # Hooks personalizados
+    /types              # Tipos personalizados
+
+    App.tsx             # Componente principal
+
+
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Demo Online
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+🔗 https://to-do-app-phi-sandy.vercel.app
+
+---
+
+## 📸 Screenshots
+
+![Desktop Screenshot](./public/screenshots/desktop.png)
+
+![Mobile Screenshot](./public/screenshots/mobile.png)
+
+---
+
+## ⚙️ Como Executar o Projeto
+
+### Pré-requisitos
+
+- Node.js (v18 ou superior)
+- npm ou yarn
+
+### Clonar o repositório
+
+```bash
+git clone https://github.com/USERNAME/to-do-app.git
+cd todo-app
 ```
+
+### Instalar dependências
+
+```bash
+npm install
+```
+
+### Executar em modo de desenvolvimento
+
+```bash
+npm run dev
+```
+
+---
+
+## 📚 O Que Aprendi
+
+Durante o desenvolvimento deste projeto, foram reforçados conhecimentos em:
+
+- Gestão de estado em React com hooks personalizados
+- Separação de lógica e UI (custom hooks)
+- Criação de interfaces interativas e responsivas
+- Implementação de animações com Framer Motion
+- Boas práticas de UX (modais, empty states, feedback visual)
+
+---
+
+## 👨‍💻 Autor
+
+Desenvolvido por Daniel Fernandes
+
+GitHub: https://github.com/DannySF01
+LinkedIn: https://linkedin.com/in/daniel-f-874186115
+
+---
+
+## 📝 Licença
+
+Este projeto foi desenvolvido exclusivamente para fins educativos.

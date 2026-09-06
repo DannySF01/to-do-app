@@ -1,16 +1,23 @@
-import { Trash2 } from "lucide-react";
+import { CalendarDays, Check, Clock, Flag, Repeat2 } from "lucide-react";
 import { motion } from "motion/react";
 import type { Task } from "../types/types";
+import TaskMenu from "./TaskMenu";
+
+interface TaskItemProps {
+  task: Task;
+  onToggle: (id: string) => void;
+  onRemove: (id: string) => void;
+  onMove: (id: string) => void;
+  onEdit: (id: string) => void;
+}
 
 export default function TaskItem({
   task,
   onToggle,
+  onEdit,
+  onMove,
   onRemove,
-}: {
-  task: Task;
-  onToggle: any;
-  onRemove: any;
-}) {
+}: TaskItemProps) {
   return (
     <motion.div
       layout
@@ -19,37 +26,85 @@ export default function TaskItem({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       onClick={() => onToggle(task.id)}
-      className="card flex items-center justify-between p-3 hover:brightness-110 cursor-pointer transition-all"
+      className="card flex items-center justify-between px-4 py-3 cursor-pointer transition-all"
     >
-      <div className="flex items-center gap-3">
-        <input
-          type="checkbox"
-          checked={task.status === "completed"}
-          readOnly
-          className="h-4 w-4 rounded border-muted accent-primary cursor-pointer"
-        />
-        <div className="space-y-0.5">
-          <p
-            className={`text-sm transition-all ${task.status === "completed" ? "line-through text-muted" : "text-foreground"}`}
-          >
-            {task.text}
-          </p>
-          {task.due && (
-            <p className="text-[10px] text-muted font-mono uppercase">
-              {new Date(task.due).toLocaleDateString()}
+      <div className="flex items-center gap-4">
+        <Checkbox checked={task.completed} />
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <p
+              className={`text-sm font-medium transition-all ${task.completed ? "line-through text-muted" : "text-foreground"}`}
+            >
+              {task.text}
             </p>
-          )}
+            {task.list && (
+              <span className="text-[10px] bg-muted/10 px-1.5 py-0.5 rounded-md capitalize text-muted">
+                {task.list}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-4 text-[10px] capitalize">
+            {task.date && (
+              <div className="flex items-center gap-1 text-muted">
+                <CalendarDays size={12} />
+                <p className="font-mono">
+                  {new Date(task.date).toLocaleDateString()}
+                </p>
+              </div>
+            )}
+            {task.time && (
+              <div className="flex items-center gap-1 text-muted">
+                <Clock size={12} />
+                <p className="font-mono">{task.time}</p>
+              </div>
+            )}
+            {task.priority !== "none" && (
+              <div className={`${task.priority}`}>
+                <span className="flex items-center gap-1 ">
+                  <Flag size={12} />
+                  {task.priority}
+                </span>
+              </div>
+            )}
+            {task.repeat !== "no" && (
+              <div className={`${task.repeat}`}>
+                <span className="flex items-center gap-1">
+                  <Repeat2 size={12} />
+                  {task.repeat}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onRemove(task.id);
-        }}
-        className="text-muted hover:text-red-500 p-1 transition-colors"
-      >
-        <Trash2 size={16} />
-      </button>
+      <TaskMenu
+        taskId={task.id}
+        onEdit={onEdit}
+        onMove={onMove}
+        onRemove={onRemove}
+      />
     </motion.div>
   );
 }
+
+const Checkbox = ({ checked }: { checked: boolean }) => {
+  return (
+    <button
+      type="button"
+      className={`
+    flex h-5 w-5 shrink-0 items-center justify-center
+    rounded-md border
+    transition-all duration-200
+    ${
+      checked
+        ? "border-blue-500 bg-blue-500 text-white"
+        : "border-zinc-500 bg-transparent hover:border-blue-500 hover:bg-blue-500/10"
+    }
+  `}
+      aria-label={checked ? "Mark as active" : "Mark as completed"}
+    >
+      {checked && <Check className="h-3.5 w-3.5 stroke-[2.5]" />}
+    </button>
+  );
+};

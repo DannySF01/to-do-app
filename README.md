@@ -1,52 +1,69 @@
 # ✅ To-Do App
 
-Uma aplicação web moderna de **gestão de tarefas**, focada em simplicidade, fluidez e uma experiência de utilizador agradável. Permite criar, concluir e remover tarefas de forma intuitiva, com um design minimalista e animações suaves.
+A modern and responsive task management web application designed to keep everyday tasks organized through a clean, intuitive, and fluid user experience.
+
+The application allows users to create, organize, filter, and manage tasks while providing a minimalist interface with smooth animations and responsive layouts across desktop and mobile devices.
 
 ---
 
-## 🎯 Funcionalidades
+## 🎯 Features
 
-- ➕ Adicionar novas tarefas através de um modal
-- ✅ Marcar tarefas como concluídas (checkbox)
-- 🗑️ Remover tarefas
-- 🕒 Definir data e hora (opcional) para cada tarefa
-- 🌙 Alternar entre modo claro e escuro
-- ✨ Animações suaves com transições (Framer Motion)
-- 📭 Estado vazio com feedback visual quando não existem tarefas
+- ➕ Create tasks through an intuitive modal
+- ✏️ Task details including title, description, date, and time
+- ✅ Mark tasks as completed
+- 🗑️ Delete tasks
+- 📋 Create and manage task lists
+- 🚩 Set task priorities
+- 🔎 Filter and organize tasks
+- 🔄 Create recurring tasks
+- 🔔 Configure task reminders
+- 📅 Set optional due dates
+- 🌙 Light and dark mode
+- 📱 Responsive design for desktop, tablet, and mobile
+- ✨ Smooth UI animations and transitions
+- 📲 Progressive Web App (PWA) support
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technologies
 
-Este projeto foi desenvolvido com:
+This project was built using the following technologies:
 
 - **Framework:** React
-- **Linguagem:** TypeScript
-- **Estilização:** Tailwind CSS
-- **Animações:** Framer Motion
-- **Ícones:** Lucide React
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **Animation:** Framer Motion
+- **Icons:** Lucide React
+- **Deployment:** Vercel
 
 ---
 
-## 📂 Estrutura do Projeto
+## 📂 Project Structure
 
 ```text
 /to-do-app
-  /public            # Assets estáticos
+  /public
+  └── /screenshots              # Application screenshots
 
-  /src               # Pasta principal
-    /components         # Componentes reutilizáveis
-    /hooks              # Hooks personalizados
-    /types              # Tipos personalizados
+  /src
+  ├── /components               # Reusable UI components
+  ├── /hooks                    # Custom React hooks
+  ├── /types                    # Type definitions
+  ├── App.tsx                   # Main application component
+  ├── main.tsx                  # Entry point of the application
 
-    App.tsx             # Componente principal
+  /index.html                   # HTML template
+  /README.md                    # Project documentation
+  /package.json                 # Project configuration
+  /tsconfig.json                # TypeScript configuration
+  /vite.config.ts               # Vite configuration
 
 
 ```
 
 ---
 
-## 🚀 Demo Online
+## 🚀 Live Demo
 
 🔗 https://to-do-app-phi-sandy.vercel.app
 
@@ -60,27 +77,28 @@ Este projeto foi desenvolvido com:
 
 ---
 
-## ⚙️ Como Executar o Projeto
+## ⚙️ Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
-- Node.js (v18 ou superior)
-- npm ou yarn
+- Node.js (v18 or higher)
+- npm or yarn
+- git
 
-### Clonar o repositório
+### Clone the repository
 
 ```bash
-git clone https://github.com/USERNAME/to-do-app.git
+git clone https://github.com/DannySF01/to-do-app.git
 cd todo-app
 ```
 
-### Instalar dependências
+### Install dependencies
 
 ```bash
 npm install
 ```
 
-### Executar em modo de desenvolvimento
+### Run the development server
 
 ```bash
 npm run dev
@@ -88,27 +106,41 @@ npm run dev
 
 ---
 
-## 📚 O Que Aprendi
+## 🧠 What I Learned
 
-Durante o desenvolvimento deste projeto, foram reforçados conhecimentos em:
+Developing this project helped strengthen my understanding of:
 
-- Gestão de estado em React com hooks personalizados
-- Separação de lógica e UI (custom hooks)
-- Criação de interfaces interativas e responsivas
-- Implementação de animações com Framer Motion
-- Boas práticas de UX (modais, empty states, feedback visual)
+- React state management with hooks
+- Building reusable and modular components
+- Creating custom React hooks
+- Implementing responsive design
+- Using Framer Motion for smooth UI animations
+- Deploying a Progressive Web App (PWA)
+- Improving UI/UX design through responsive layouts
 
 ---
 
-## 👨‍💻 Autor
+## 🔮 Future Improvements
 
-Desenvolvido por Daniel Fernandes
+- Add authentication
+- Integrate with backend APIs for data persistence
+- Improve accessibility even further
+- Optimize performance
+- Improve UI/UX even further
+- Handle errors and edge cases
+- Push Notifications
+
+---
+
+## 👨‍💻 Author
+
+Developed by Daniel Fernandes
 
 GitHub: https://github.com/DannySF01
 LinkedIn: https://linkedin.com/in/daniel-f-874186115
 
 ---
 
-## 📝 Licença
+## 📝 License
 
-Este projeto foi desenvolvido exclusivamente para fins educativos.
+This project was developed for educational purposes.

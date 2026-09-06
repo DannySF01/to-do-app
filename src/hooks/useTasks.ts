@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { Task, TFilters } from "../types/types";
+import type { Task } from "../types/types";
 
 export function useTasks() {
   const [tasks, setTasks] = useState<Task[]>(() => {
@@ -11,21 +11,27 @@ export function useTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = (text: string, due?: string) => {
-    if (!text.trim()) return;
+  const addTask = (task: Task) => {
+    const { text, date, time, priority, list, repeat, reminder } = task;
     setTasks((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), text, status: "active", due },
+      {
+        id: crypto.randomUUID(),
+        text,
+        date,
+        time,
+        priority,
+        list,
+        repeat,
+        completed: false,
+        reminder,
+      },
     ]);
   };
 
   const toggleTask = (id: string) => {
     setTasks((prev) =>
-      prev.map((t) =>
-        t.id === id
-          ? { ...t, status: t.status === "active" ? "completed" : "active" }
-          : t,
-      ),
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
     );
   };
 
@@ -34,15 +40,11 @@ export function useTasks() {
   };
 
   const clearCompleted = () => {
-    setTasks((prev) => prev.filter((t) => t.status !== "completed"));
+    setTasks((prev) => prev.filter((t) => t.completed === false));
   };
 
-  const getFilteredTasks = (filter: TFilters): Task[] => {
-    return tasks.filter((t) => {
-      if (filter === "all") return t;
-      if (filter === "active") return t.status === "active";
-      if (filter === "completed") return t.status === "completed";
-    });
+  const getFilteredTasks = (selectedList: string): Task[] => {
+    return tasks.filter((t) => t.list === selectedList || selectedList === "");
   };
 
   return {

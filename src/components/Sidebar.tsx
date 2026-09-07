@@ -11,10 +11,11 @@ import {
   ListTodo,
   Menu,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { List, Task, TFilters } from "../types/types";
 import { useTheme } from "../hooks/useTheme";
 import { usePWA } from "../hooks/usePWA";
+import { motion } from "motion/react";
 
 interface SidebarProps {
   filter: string;
@@ -47,6 +48,8 @@ export default function Sidebar({
   const { theme, toggleTheme } = useTheme();
   const { isInstallable, install } = usePWA();
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
   function createList(name: string, color: string) {
     const newList = {
       id: crypto.randomUUID(),
@@ -59,6 +62,12 @@ export default function Sidebar({
 
     localStorage.setItem("lists", JSON.stringify(lists));
   }
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <>
@@ -78,7 +87,22 @@ export default function Sidebar({
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Mobile overlay */}
+      {/* Edge swipe zone */}
+      {!isOpen && (
+        <motion.div
+          className="fixed inset-y-0 left-0 z-30 w-6 md:hidden"
+          drag="x"
+          dragConstraints={{ left: 0, right: 80 }}
+          dragElastic={0}
+          onDragEnd={(_, info) => {
+            if (info.offset.x > 50 || info.velocity.x > 300) {
+              setIsOpen(true);
+            }
+          }}
+        />
+      )}
+
+      {/* Mobile overlay outside the sidebar that closes it */}
       {isOpen && (
         <button
           onClick={() => setIsOpen(false)}
@@ -92,15 +116,32 @@ export default function Sidebar({
         />
       )}
 
+      <motion.div
+        className="fixed left-0 top-0 bottom-0 z-30 w-5 md:hidden"
+        drag="x"
+        dragConstraints={{ left: 0, right: 280 }}
+        dragElastic={0}
+        onDragEnd={(_, info) => {
+          if (info.offset.x > 80 || info.velocity.x > 500) {
+            setIsOpen(true);
+          }
+        }}
+      />
+
       {/* Sidebar */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col border-r border-border bg-surface px-3 py-4 transition-transform duration-300 ease-out
-
-        ${isOpen ? "translate-x-0" : "-translate-x-full"}
-
-        md:static
-        md:translate-x-0
-      `}
+      <motion.aside
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col border-r border-border bg-surface px-3 py-4 transition-transform duration-300 ease-out md:static md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        initial={false}
+        animate={{ x: isMobile ? (isOpen ? 0 : "-100%") : 0 }}
+        transition={{ type: "spring", stiffness: 400, damping: 35 }}
+        drag={isMobile ? "x" : false}
+        dragConstraints={{ left: -256, right: 0 }}
+        dragElastic={0.05}
+        onDragEnd={(_, info) => {
+          if (info.offset.x < -70 || info.velocity.x < -400) {
+            setIsOpen(false);
+          }
+        }}
       >
         <div className="mb-6 flex items-center justify-between px-2">
           <h1 className="text-lg font-semibold tracking-[-0.01em]">
@@ -233,7 +274,7 @@ export default function Sidebar({
             <ChevronDown className="h-3.5 w-3.5 text-muted transition group-hover:text-zinc-600" />
           </button>
         </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }

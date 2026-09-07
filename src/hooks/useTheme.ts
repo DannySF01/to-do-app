@@ -7,7 +7,17 @@ export function useTheme() {
 
   useEffect(() => {
     localStorage.setItem("theme", theme);
+
     document.documentElement.classList.toggle("dark", theme === "dark");
+
+    const background = getComputedStyle(document.documentElement)
+      .getPropertyValue("--background")
+      .trim();
+
+    // Mobile status bar color
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute("content", `oklch(${background})`);
   }, [theme]);
 
   const toggleTheme = () =>

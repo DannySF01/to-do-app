@@ -115,7 +115,8 @@ export default function App() {
         numActiveTasks={activeTasks.length}
         numCompletedTasks={completedTasks.length}
       />
-      <div className="w-full max-w-4xl space-y-6 py-16 md:py-8 md:px-12 px-6 font-medium">
+
+      <div className="w-full max-w-4xl space-y-6 py-18 md:py-8 md:px-12 px-6 font-medium">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-lg tracking-tight">
@@ -244,29 +245,47 @@ const MobileNav = ({
     <button
       type="button"
       onClick={onClick}
-      className={`flex flex-col items-center gap-0.5 transition-colors duration-300 text-sm ${active ? "text-primary" : "text-muted"}`}
+      className={`flex min-w-16 flex-col items-center gap-0.5 transition-colors duration-300 ${
+        active ? "text-primary" : "text-muted"
+      }`}
     >
       {children}
     </button>
   );
+
   return (
-    <div className="fixed bg-surface border-t border-border px-12 py-4 w-full bottom-0 flex font-medium justify-between gap-6 md:hidden">
+    <nav
+      className="
+        fixed inset-x-0 bottom-0 z-40
+        flex h-16 items-center justify-around
+        border-t border-border
+        bg-background/95
+        px-6
+        pb-[env(safe-area-inset-bottom)]
+        backdrop-blur-xl
+        md:hidden
+      "
+    >
       <NavButton
         onClick={() => onClick("overview")}
         active={active === "overview"}
       >
-        <LayoutDashboard size={20} strokeWidth={2} />
-        <span>Overview</span>
+        <LayoutDashboard size={19} strokeWidth={2} />
+        <span className="text-[10px] font-medium">Overview</span>
       </NavButton>
+
       <NavButton onClick={() => onClick("active")} active={active === "active"}>
-        <ListTodo size={20} strokeWidth={2} /> <span>Active</span>
+        <ListTodo size={19} strokeWidth={2} />
+        <span className="text-[10px] font-medium">Active</span>
       </NavButton>
+
       <NavButton
         onClick={() => onClick("completed")}
         active={active === "completed"}
       >
-        <CheckCircle2 size={20} strokeWidth={2} /> <span>Completed</span>
+        <CheckCircle2 size={19} strokeWidth={2} />
+        <span className="text-[10px] font-medium">Completed</span>
       </NavButton>
-    </div>
+    </nav>
   );
 };

@@ -13,8 +13,8 @@ export default defineConfig({
       manifest: {
         name: "to-do-app",
         short_name: "to-do-app",
-        theme_color: "#ffffff",
-        background_color: "#ffffff",
+        theme_color: "#faf9f7",
+        background_color: "#faf9f7",
         display: "standalone",
         icons: [
           {

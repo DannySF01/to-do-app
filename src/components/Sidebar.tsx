@@ -90,7 +90,7 @@ export default function Sidebar({
       {/* Edge swipe zone */}
       {!isOpen && (
         <motion.div
-          className="fixed inset-y-0 left-0 z-30 w-6 md:hidden"
+          className="fixed inset-y-0 left-0 z-30 w-1/2 md:hidden"
           drag="x"
           dragConstraints={{ left: 0, right: 80 }}
           dragElastic={0}
@@ -115,18 +115,6 @@ export default function Sidebar({
           aria-label="Close sidebar"
         />
       )}
-
-      <motion.div
-        className="fixed left-0 top-0 bottom-0 z-30 w-5 md:hidden"
-        drag="x"
-        dragConstraints={{ left: 0, right: 280 }}
-        dragElastic={0}
-        onDragEnd={(_, info) => {
-          if (info.offset.x > 80 || info.velocity.x > 500) {
-            setIsOpen(true);
-          }
-        }}
-      />
 
       {/* Sidebar */}
       <motion.aside

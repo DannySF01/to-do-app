@@ -52,7 +52,7 @@
 
 @layer base {
   * {
-    @apply transition-colors duration-300;
+    @apply transition-colors duration-300 scrollbar-mobile-hidden;
   }
 
   body {
@@ -94,5 +94,15 @@
   .card {
     @apply border border-border bg-surface rounded-xl 
            transition-all duration-200 ease-in-out hover:border-border-strong hover:shadow-sm;
+  }
+}
+
+@utility scrollbar-mobile-hidden {
+  @media (max-width: 767px) {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }

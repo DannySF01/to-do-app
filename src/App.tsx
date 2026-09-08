@@ -3,11 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
   Briefcase,
-  CheckCircle2,
   Heart,
-  LayoutDashboard,
   ListChecks,
-  ListTodo,
   Plus,
   User,
 } from "lucide-react";
@@ -17,6 +14,7 @@ import { useNotifications } from "./hooks/useNotifications";
 import type { List, Task, TFilters } from "./types/types";
 import Sidebar from "./components/Sidebar";
 import CreateTask from "./components/CreateTask";
+import MobileNav from "./components/MobileNav";
 
 export default function App() {
   const { tasks, addTask, toggleTask, removeTask, getFilteredTasks } =
@@ -116,7 +114,7 @@ export default function App() {
         numCompletedTasks={completedTasks.length}
       />
 
-      <div className="w-full max-w-4xl space-y-6 py-18 md:py-8 md:px-12 px-6 font-medium">
+      <div className="w-full max-w-4xl space-y-6 pt-18 md:py-8 md:px-12 px-6 font-medium">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-lg tracking-tight">
@@ -133,11 +131,9 @@ export default function App() {
 
           <button
             onClick={() => setIsCreateTaskOpen(true)}
-            className="btn-primary p-4 rounded-full absolute bottom-24 right-6 md:p-2 md:static z-10"
+            className="btn-primary p-2 hidden md:block"
           >
-            <Plus size={22} strokeWidth={2} className="md:hidden" />
-
-            <span className="font-medium text-sm hidden md:flex items-center gap-2 px-1">
+            <span className="font-medium text-sm flex items-center gap-2 ">
               <Plus size={18} strokeWidth={2} />
               New Task
             </span>
@@ -152,7 +148,7 @@ export default function App() {
           />
         )}
 
-        <div className="space-y-6">
+        <div className="space-y-6 pb-6 h-full">
           <AnimatePresence mode="popLayout">
             {filteredTasks.length === 0 ? (
               <motion.div
@@ -177,7 +173,7 @@ export default function App() {
                     className="space-y-1"
                   >
                     <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
-                      Active - {activeTasks.length}
+                      {activeTasks.length} Active
                     </div>
                     {activeTasks.map((task) => (
                       <TaskItem
@@ -200,7 +196,7 @@ export default function App() {
                     exit={{ opacity: 0 }}
                   >
                     <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
-                      Completed - {completedTasks.length}
+                      {completedTasks.length} Completed
                     </div>
                     <div className="space-y-1 opacity-70">
                       {completedTasks.map((task) => (
@@ -221,71 +217,13 @@ export default function App() {
           </AnimatePresence>
         </div>
       </div>
-      <MobileNav onClick={(e) => setFilter(e)} active={filter} />
+      <MobileNav
+        onHome={() => setFilter("overview")}
+        onTasks={() => setFilter("active")}
+        onCalendar={() => {}}
+        onSettings={() => {}}
+        onAddTask={() => setIsCreateTaskOpen(true)}
+      />
     </div>
   );
 }
-
-const MobileNav = ({
-  onClick,
-  active,
-}: {
-  onClick: (value: TFilters) => void;
-  active: string;
-}) => {
-  const NavButton = ({
-    active,
-    onClick,
-    children,
-  }: {
-    active: boolean;
-    onClick?: () => void;
-    children: React.ReactNode;
-  }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex min-w-16 flex-col items-center gap-0.5 transition-colors duration-300 ${
-        active ? "text-primary" : "text-muted"
-      }`}
-    >
-      {children}
-    </button>
-  );
-
-  return (
-    <nav
-      className="
-        fixed inset-x-0 bottom-0 z-40
-        flex h-16 items-center justify-around
-        border-t border-border
-        bg-background/95
-        px-6
-        pb-[env(safe-area-inset-bottom)]
-        backdrop-blur-xl
-        md:hidden
-      "
-    >
-      <NavButton
-        onClick={() => onClick("overview")}
-        active={active === "overview"}
-      >
-        <LayoutDashboard size={19} strokeWidth={2} />
-        <span className="text-[10px] font-medium">Overview</span>
-      </NavButton>
-
-      <NavButton onClick={() => onClick("active")} active={active === "active"}>
-        <ListTodo size={19} strokeWidth={2} />
-        <span className="text-[10px] font-medium">Active</span>
-      </NavButton>
-
-      <NavButton
-        onClick={() => onClick("completed")}
-        active={active === "completed"}
-      >
-        <CheckCircle2 size={19} strokeWidth={2} />
-        <span className="text-[10px] font-medium">Completed</span>
-      </NavButton>
-    </nav>
-  );
-};

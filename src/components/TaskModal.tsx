@@ -19,24 +19,33 @@ import RepeatPicker from "./RepeatPicker";
 import type { List, Task, TaskPriority, TaskRepeat } from "../types/types";
 
 interface CreateTaskProps {
+  mode: "create" | "edit";
+  task?: Task;
   lists: List[];
   onSave: (task: Task) => void;
   onClose: () => void;
 }
 
-export default function CreateTask({
+export default function TaskModal({
+  mode,
+  task,
   lists,
   onSave,
   onClose,
 }: CreateTaskProps) {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(task?.text || "");
   const [toggleReminder, setToggleReminder] = useState(false);
 
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [priority, setPriority] = useState<TaskPriority>("none");
-  const [list, setList] = useState<List["id"] | undefined>(undefined);
-  const [repeat, setRepeat] = useState<TaskRepeat>("no");
+  const [taskId] = useState(task?.id || "");
+  const [date, setDate] = useState(task?.date || "");
+  const [time, setTime] = useState(task?.time || "");
+  const [priority, setPriority] = useState<TaskPriority>(
+    task?.priority || "none",
+  );
+  const [list, setList] = useState<List["id"] | undefined>(
+    task?.list || undefined,
+  );
+  const [repeat, setRepeat] = useState<TaskRepeat>(task?.repeat || "no");
 
   const options = [
     {
@@ -99,7 +108,7 @@ export default function CreateTask({
 
   const handleSave = () => {
     const task: Task = {
-      id: crypto.randomUUID(),
+      id: taskId || crypto.randomUUID(),
       text: input,
       reminder: toggleReminder,
       date,
@@ -148,7 +157,7 @@ export default function CreateTask({
             disabled={!input.trim()}
             className="btn-primary"
           >
-            Save
+            {mode === "edit" ? "Update" : "Save"}
           </button>
         </header>
 
@@ -157,6 +166,7 @@ export default function CreateTask({
             onChange={(e) => setInput(e.target.value)}
             autoFocus
             placeholder="What needs to be done?"
+            value={input}
             className="mt-7
               w-full
               resize-none

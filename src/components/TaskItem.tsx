@@ -7,7 +7,7 @@ interface TaskItemProps {
   task: Task;
   onToggle: (id: string) => void;
   onRemove: (id: string) => void;
-  onMove: (id: string) => void;
+  onDuplicate: (id: string) => void;
   onEdit: (id: string) => void;
 }
 
@@ -15,7 +15,7 @@ export default function TaskItem({
   task,
   onToggle,
   onEdit,
-  onMove,
+  onDuplicate,
   onRemove,
 }: TaskItemProps) {
   return (
@@ -81,7 +81,7 @@ export default function TaskItem({
       <TaskMenu
         taskId={task.id}
         onEdit={onEdit}
-        onMove={onMove}
+        onDuplicate={onDuplicate}
         onRemove={onRemove}
       />
     </motion.div>

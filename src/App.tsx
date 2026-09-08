@@ -13,11 +13,11 @@ import TaskItem from "./components/TaskItem";
 import { useNotifications } from "./hooks/useNotifications";
 import type { List, Task, TFilters } from "./types/types";
 import Sidebar from "./components/Sidebar";
-import CreateTask from "./components/CreateTask";
 import MobileNav from "./components/MobileNav";
+import TaskModal from "./components/TaskModal";
 
 export default function App() {
-  const { tasks, addTask, toggleTask, removeTask, getFilteredTasks } =
+  const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
     useTasks();
 
   const { requestPermission, sendSystemNotification } = useNotifications();
@@ -62,11 +62,20 @@ export default function App() {
   const completedTasks = filteredTasks.filter((t) => t.completed === true);
 
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  const handleAdd = (task: Task) => {
+  function handleAdd(task: Task) {
     addTask(task);
     requestPermission();
-  };
+  }
+
+  function handleEdit(task: Task) {
+    editTask(task.id, task);
+  }
+
+  function handleDuplicate(task: Task) {
+    addTask({ ...task, id: crypto.randomUUID() });
+  }
 
   useEffect(() => {
     const checkInterval = setInterval(() => {
@@ -141,10 +150,21 @@ export default function App() {
         </div>
 
         {isCreateTaskOpen && (
-          <CreateTask
+          <TaskModal
+            mode="create"
             lists={lists}
             onSave={handleAdd}
             onClose={() => setIsCreateTaskOpen(false)}
+          />
+        )}
+
+        {editingTask && (
+          <TaskModal
+            mode="edit"
+            task={editingTask}
+            lists={lists}
+            onSave={handleEdit}
+            onClose={() => setEditingTask(null)}
           />
         )}
 
@@ -180,8 +200,8 @@ export default function App() {
                         key={task.id}
                         task={task}
                         onToggle={toggleTask}
-                        onEdit={() => {}}
-                        onMove={() => {}}
+                        onEdit={() => setEditingTask(task)}
+                        onDuplicate={() => handleDuplicate(task)}
                         onRemove={removeTask}
                       />
                     ))}
@@ -204,8 +224,8 @@ export default function App() {
                           key={task.id}
                           task={task}
                           onToggle={toggleTask}
-                          onEdit={() => {}}
-                          onMove={() => {}}
+                          onEdit={() => setEditingTask(task)}
+                          onDuplicate={() => handleDuplicate(task)}
                           onRemove={removeTask}
                         />
                       ))}

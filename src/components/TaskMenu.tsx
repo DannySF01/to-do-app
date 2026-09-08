@@ -1,19 +1,19 @@
 "use client";
 
-import { MoreVertical, Pencil, FolderInput, Trash2 } from "lucide-react";
+import { Copy, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 interface TaskMenuProps {
   taskId: string;
   onEdit: (id: string) => void;
-  onMove: (id: string) => void;
+  onDuplicate: (id: string) => void;
   onRemove: (id: string) => void;
 }
 
 export default function TaskMenu({
   taskId,
   onEdit,
-  onMove,
+  onDuplicate,
   onRemove,
 }: TaskMenuProps) {
   const [open, setOpen] = useState(false);
@@ -60,6 +60,7 @@ export default function TaskMenu({
             onClick={(e) => {
               e.stopPropagation();
               onEdit(taskId);
+              setOpen(false);
             }}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2
                              text-sm text-foreground
@@ -72,14 +73,15 @@ export default function TaskMenu({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              onMove(taskId);
+              onDuplicate(taskId);
+              setOpen(false);
             }}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2
                              text-sm text-foreground
                              hover:bg-surface-hover"
           >
-            <FolderInput className="h-4 w-4 text-muted" />
-            Move to list
+            <Copy className="h-4 w-4 text-muted" />
+            Duplicate
           </button>
 
           <div className="my-1.5 h-px bg-border" />

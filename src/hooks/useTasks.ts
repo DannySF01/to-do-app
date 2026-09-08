@@ -12,21 +12,11 @@ export function useTasks() {
   }, [tasks]);
 
   const addTask = (task: Task) => {
-    const { text, date, time, priority, list, repeat, reminder } = task;
-    setTasks((prev) => [
-      ...prev,
-      {
-        id: crypto.randomUUID(),
-        text,
-        date,
-        time,
-        priority,
-        list,
-        repeat,
-        completed: false,
-        reminder,
-      },
-    ]);
+    setTasks((prev) => [...prev, task]);
+  };
+
+  const editTask = (id: string, task: Task) => {
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, ...task } : t)));
   };
 
   const toggleTask = (id: string) => {
@@ -50,6 +40,7 @@ export function useTasks() {
   return {
     tasks,
     addTask,
+    editTask,
     toggleTask,
     removeTask,
     clearCompleted,

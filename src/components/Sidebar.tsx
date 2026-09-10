@@ -18,6 +18,8 @@ import { usePWA } from "../hooks/usePWA";
 import { motion } from "motion/react";
 
 interface SidebarProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   filter: string;
   setFilter: React.Dispatch<React.SetStateAction<TFilters>>;
   selectedList: string;
@@ -30,6 +32,8 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
+  open,
+  setOpen,
   filter,
   setFilter,
   selectedList,
@@ -42,8 +46,6 @@ export default function Sidebar({
 }: SidebarProps) {
   const [isAddingList, setIsAddingList] = useState(false);
   const [newListName, setNewListName] = useState("");
-
-  const [isOpen, setIsOpen] = useState(false);
 
   const { theme, toggleTheme } = useTheme();
   const { isInstallable, install } = usePWA();
@@ -73,7 +75,7 @@ export default function Sidebar({
     <>
       {/* Mobile menu button */}
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => setOpen(true)}
         className="
         fixed left-4 top-4 z-40
         flex h-10 w-10 items-center justify-center
@@ -87,25 +89,10 @@ export default function Sidebar({
         <Menu className="h-5 w-5" />
       </button>
 
-      {/* Edge swipe zone */}
-      {!isOpen && (
-        <motion.div
-          className="fixed inset-y-0 left-0 z-30 w-1/2 md:hidden"
-          drag="x"
-          dragConstraints={{ left: 0, right: 80 }}
-          dragElastic={0}
-          onDragEnd={(_, info) => {
-            if (info.offset.x > 50 || info.velocity.x > 300) {
-              setIsOpen(true);
-            }
-          }}
-        />
-      )}
-
       {/* Mobile overlay outside the sidebar that closes it */}
-      {isOpen && (
+      {open && (
         <button
-          onClick={() => setIsOpen(false)}
+          onClick={() => setOpen(false)}
           className="
           fixed inset-0 z-40
           bg-black/40
@@ -118,16 +105,16 @@ export default function Sidebar({
 
       {/* Sidebar */}
       <motion.aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col border-r border-border bg-surface px-3 py-4 transition-transform duration-300 ease-out md:static md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col border-r border-border bg-surface px-3 py-4 transition-transform duration-300 ease-out md:static md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}
         initial={false}
-        animate={{ x: isMobile ? (isOpen ? 0 : "-100%") : 0 }}
+        animate={{ x: isMobile ? (open ? 0 : "-100%") : 0 }}
         transition={{ type: "spring", stiffness: 400, damping: 35 }}
         drag={isMobile ? "x" : false}
         dragConstraints={{ left: -256, right: 0 }}
         dragElastic={0.05}
         onDragEnd={(_, info) => {
           if (info.offset.x < -70 || info.velocity.x < -400) {
-            setIsOpen(false);
+            setOpen(false);
           }
         }}
       >

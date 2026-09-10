@@ -15,6 +15,7 @@ import type { List, Task, TFilters } from "./types/types";
 import Sidebar from "./components/Sidebar";
 import MobileNav from "./components/MobileNav";
 import TaskModal from "./components/TaskModal";
+import { useSidebarSwipe } from "./hooks/useSidebarSwipe";
 
 export default function App() {
   const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
@@ -64,6 +65,8 @@ export default function App() {
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   function handleAdd(task: Task) {
     addTask(task);
     requestPermission();
@@ -109,9 +112,16 @@ export default function App() {
     }
   };
 
+  useSidebarSwipe({
+    onOpen: () => setSidebarOpen(true),
+    enabled: !sidebarOpen,
+  });
+
   return (
     <div className="min-h-screen flex">
       <Sidebar
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
         lists={lists}
         setLists={setLists}
         filter={filter}
@@ -123,7 +133,7 @@ export default function App() {
         numCompletedTasks={completedTasks.length}
       />
 
-      <div className="w-full max-w-4xl space-y-6 pt-18 md:py-8 md:px-12 px-6 font-medium">
+      <div className="w-full max-w-4xl space-y-6 pt-18 md:py-8 md:px-12 px-6 font-medium touch-pan-y">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-lg tracking-tight">

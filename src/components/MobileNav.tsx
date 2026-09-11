@@ -1,7 +1,7 @@
 import { Home, ListTodo, CalendarDays, Settings, Plus } from "lucide-react";
-import { useState } from "react";
 
 interface BottomNavProps {
+  active: string;
   onHome: () => void;
   onTasks: () => void;
   onAddTask: () => void;
@@ -10,16 +10,13 @@ interface BottomNavProps {
 }
 
 export default function BottomNav({
+  active,
   onHome,
   onTasks,
   onCalendar,
   onSettings,
   onAddTask,
 }: BottomNavProps) {
-  const [active, setActive] = useState<
-    "home" | "tasks" | "calendar" | "settings"
-  >("home");
-
   return (
     <nav className="fixed inset-x-0 bottom-4 z-35 px-4 md:hidden">
       <div
@@ -35,24 +32,12 @@ export default function BottomNav({
         "
       >
         {/* Home */}
-        <NavButton
-          onClick={() => {
-            setActive("home");
-            onHome();
-          }}
-          active={active === "home"}
-        >
+        <NavButton onClick={onHome} active={active === "overview"}>
           <Home size={21} strokeWidth={1.8} />
         </NavButton>
 
         {/* Tasks */}
-        <NavButton
-          onClick={() => {
-            setActive("tasks");
-            onTasks();
-          }}
-          active={active === "tasks"}
-        >
+        <NavButton onClick={onTasks} active={active === "active"}>
           <ListTodo size={21} strokeWidth={1.8} />
         </NavButton>
 
@@ -75,24 +60,12 @@ export default function BottomNav({
         </button>
 
         {/* Calendar */}
-        <NavButton
-          onClick={() => {
-            setActive("calendar");
-            onCalendar();
-          }}
-          active={active === "calendar"}
-        >
+        <NavButton onClick={onCalendar} active={active === "calendar"}>
           <CalendarDays size={21} strokeWidth={1.8} />
         </NavButton>
 
         {/* Settings */}
-        <NavButton
-          onClick={() => {
-            setActive("settings");
-            onSettings();
-          }}
-          active={active === "settings"}
-        >
+        <NavButton onClick={onSettings} active={active === "settings"}>
           <Settings size={21} strokeWidth={1.8} />
         </NavButton>
       </div>

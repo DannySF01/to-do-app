@@ -18,7 +18,12 @@ export interface List {
   color?: string;
 }
 
-export type TFilters = "overview" | "active" | "completed";
+export type TView =
+  | "overview"
+  | "active"
+  | "completed"
+  | "calendar"
+  | "settings";
 
 export type TaskPriority = "none" | "low" | "medium" | "high";
 

@@ -4,25 +4,20 @@ import {
   LayoutDashboard,
   Plus,
   Settings,
-  MonitorDown,
-  Moon,
-  Sun,
   ListTodo,
   Menu,
   Folder,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { List, Task, TFilters } from "../types/types";
-import { useTheme } from "../hooks/useTheme";
-import { usePWA } from "../hooks/usePWA";
+import type { List, Task, TView } from "../types/types";
 import { motion } from "motion/react";
 import ListMenu from "./ListMenu";
 
 interface SidebarProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  filter: string;
-  setFilter: React.Dispatch<React.SetStateAction<TFilters>>;
+  view: string;
+  setView: React.Dispatch<React.SetStateAction<TView>>;
   selectedList: string;
   setSelectedList: React.Dispatch<React.SetStateAction<string>>;
   onCreateList: () => void;
@@ -37,8 +32,8 @@ interface SidebarProps {
 export default function Sidebar({
   open,
   setOpen,
-  filter,
-  setFilter,
+  view,
+  setView,
   selectedList,
   setSelectedList,
   lists,
@@ -49,9 +44,6 @@ export default function Sidebar({
   numActiveTasks,
   numCompletedTasks,
 }: SidebarProps) {
-  const { theme, toggleTheme } = useTheme();
-  const { isInstallable, install } = usePWA();
-
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -107,27 +99,9 @@ export default function Sidebar({
           }
         }}
       >
-        <div className="mb-6 flex items-center justify-between px-2">
-          <h1 className="text-lg font-semibold tracking-[-0.01em]">
-            To-Do App
-          </h1>
-          <div className="flex items-center gap-3">
-            {isInstallable && (
-              <button
-                onClick={install}
-                className="btn text-muted hover:text-foreground"
-              >
-                <MonitorDown size={18} />
-              </button>
-            )}
-            <button
-              onClick={toggleTheme}
-              className="btn text-muted hover:text-foreground"
-            >
-              {theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
-          </div>
-        </div>
+        <h1 className="text-lg font-semibold tracking-[-0.01em] mb-6 px-2">
+          To-Do App
+        </h1>
 
         <div className="space-y-6">
           <section>
@@ -137,24 +111,24 @@ export default function Sidebar({
 
             <nav className="space-y-0.5">
               <SidebarItem
-                active={filter === "overview"}
+                active={view === "overview"}
                 icon={<LayoutDashboard />}
                 label="Overview"
-                onClick={() => setFilter("overview")}
+                onClick={() => setView("overview")}
               />
               <SidebarItem
-                active={filter === "active"}
+                active={view === "active"}
                 icon={<ListTodo />}
                 label="Active"
                 count={numActiveTasks}
-                onClick={() => setFilter("active")}
+                onClick={() => setView("active")}
               />
               <SidebarItem
-                active={filter === "completed"}
+                active={view === "completed"}
                 icon={<CheckCircle2 />}
                 label="Completed"
                 count={numCompletedTasks}
-                onClick={() => setFilter("completed")}
+                onClick={() => setView("completed")}
               />
             </nav>
           </section>
@@ -198,7 +172,11 @@ export default function Sidebar({
         <div className="flex-1" />
 
         <div className="space-y-2 border-t border-border pt-3">
-          <SidebarItem icon={<Settings />} label="Settings" />
+          <SidebarItem
+            onClick={() => setView("settings")}
+            icon={<Settings />}
+            label="Settings"
+          />
 
           <button className="group flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-muted/5">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-[11px] font-semibold text-zinc-600 ring-1 ring-zinc-200">
@@ -249,7 +227,7 @@ function SidebarItem({
   return (
     <div
       onClick={onClick}
-      className={`group flex w-full font-medium items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition ${
+      className={`group flex w-full cursor-pointer font-medium items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition ${
         active
           ? "bg-primary/10 text-foreground"
           : "text-foreground/70 hover:bg-surface-hover hover:text-foreground"

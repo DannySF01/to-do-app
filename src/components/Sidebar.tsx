@@ -4,18 +4,19 @@ import {
   LayoutDashboard,
   Plus,
   Settings,
-  ListCheck,
   MonitorDown,
   Moon,
   Sun,
   ListTodo,
   Menu,
+  Folder,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { List, Task, TFilters } from "../types/types";
 import { useTheme } from "../hooks/useTheme";
 import { usePWA } from "../hooks/usePWA";
 import { motion } from "motion/react";
+import ListMenu from "./ListMenu";
 
 interface SidebarProps {
   open: boolean;
@@ -24,8 +25,10 @@ interface SidebarProps {
   setFilter: React.Dispatch<React.SetStateAction<TFilters>>;
   selectedList: string;
   setSelectedList: React.Dispatch<React.SetStateAction<string>>;
+  onCreateList: () => void;
+  onEditList: (list: List) => void;
+  onDeleteList: (list: List) => void;
   lists: List[];
-  setLists: React.Dispatch<React.SetStateAction<List[]>>;
   tasks: Task[];
   numCompletedTasks: number;
   numActiveTasks: number;
@@ -39,31 +42,17 @@ export default function Sidebar({
   selectedList,
   setSelectedList,
   lists,
-  setLists,
+  onCreateList,
+  onEditList,
+  onDeleteList,
   tasks,
   numActiveTasks,
   numCompletedTasks,
 }: SidebarProps) {
-  const [isAddingList, setIsAddingList] = useState(false);
-  const [newListName, setNewListName] = useState("");
-
   const { theme, toggleTheme } = useTheme();
   const { isInstallable, install } = usePWA();
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
-  function createList(name: string, color: string) {
-    const newList = {
-      id: crypto.randomUUID(),
-      name,
-      icon: <ListCheck />,
-      color,
-    } as List;
-
-    setLists((prev) => [...prev, newList]);
-
-    localStorage.setItem("lists", JSON.stringify(lists));
-  }
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -178,7 +167,7 @@ export default function Sidebar({
 
               <button
                 className="text-muted transition hover:text-primary px-1"
-                onClick={() => setIsAddingList(true)}
+                onClick={onCreateList}
               >
                 <Plus className="h-3.5 w-3.5" />
               </button>
@@ -187,8 +176,9 @@ export default function Sidebar({
             <nav className="space-y-0.5">
               {lists.map((list) => (
                 <SidebarItem
+                  type="list"
                   key={list.id}
-                  icon={list.icon}
+                  icon={<Folder size={18} />}
                   color={list.color}
                   label={list.name}
                   count={tasks.filter((task) => task.list === list.id).length}
@@ -197,38 +187,13 @@ export default function Sidebar({
                     if (selectedList === list.id) setSelectedList("");
                     else setSelectedList(list.id);
                   }}
+                  onDelete={() => onDeleteList(list)}
+                  onRename={() => onEditList(list)}
                 />
               ))}
             </nav>
           </section>
         </div>
-
-        {isAddingList && (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const name = newListName.trim();
-              if (!name) return;
-              createList(name, "text-violet-500");
-              setNewListName("");
-              setIsAddingList(false);
-            }}
-            className="mt-2"
-          >
-            <input
-              autoFocus
-              value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
-              onBlur={() => {
-                if (!newListName.trim()) {
-                  setIsAddingList(false);
-                }
-              }}
-              placeholder="List name..."
-              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none transition placeholder:text-muted "
-            />
-          </form>
-        )}
 
         <div className="flex-1" />
 
@@ -254,25 +219,37 @@ export default function Sidebar({
   );
 }
 
-function SidebarItem({
-  label,
-  icon,
-  active = false,
-  count,
-  color,
-  onClick,
-}: {
+interface SidebarItemProps {
+  type?: "view" | "list";
   label: string;
   icon: React.ReactNode;
   active?: boolean;
   count?: number;
   color?: string;
   onClick?: () => void;
-}) {
+  onDelete?: () => void;
+  onRename?: () => void;
+}
+
+function SidebarItem({
+  type = "view",
+  label,
+  icon,
+  active = false,
+  count,
+  color,
+  onClick,
+  onDelete,
+  onRename,
+}: SidebarItemProps) {
+  const isDefaultList = ["personal", "work", "study", "wishlist"].includes(
+    label.trim().toLowerCase(),
+  );
+
   return (
-    <button
+    <div
       onClick={onClick}
-      className={`flex w-full font-medium items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition ${
+      className={`group flex w-full font-medium items-center gap-3 rounded-lg px-3 py-2 text-[13px] transition ${
         active
           ? "bg-primary/10 text-foreground"
           : "text-foreground/70 hover:bg-surface-hover hover:text-foreground"
@@ -290,11 +267,16 @@ function SidebarItem({
 
       <span className="flex-1 text-left">{label}</span>
 
-      {count !== undefined && (
-        <span className="text-[11px] tabular-nums text-foreground/70 bg-muted/20 px-2 py-0.5 rounded-full">
-          {count}
-        </span>
-      )}
-    </button>
+      <div className="flex items-center gap-2">
+        {type === "list" && !isDefaultList && (
+          <ListMenu onDelete={onDelete!} onRename={onRename!} />
+        )}
+        {count !== undefined && (
+          <span className="text-[11px] tabular-nums text-foreground/70 bg-muted/20 px-2 py-0.5 rounded-full">
+            {count}
+          </span>
+        )}
+      </div>
+    </div>
   );
 }

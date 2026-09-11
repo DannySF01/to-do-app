@@ -1,5 +1,3 @@
-"use client";
-
 import { ChevronRight, ChevronUp } from "lucide-react";
 import { useState, type ReactNode } from "react";
 

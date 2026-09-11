@@ -1,5 +1,3 @@
-"use client";
-
 import { Repeat2 } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 import type { TaskRepeat } from "../types/types";

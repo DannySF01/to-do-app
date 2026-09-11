@@ -1,5 +1,3 @@
-"use client";
-
 import { Folder, Plus } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 import type { List } from "../types/types";
@@ -48,7 +46,7 @@ export default function ListPicker({
             `}
           >
             <span className={`flex h-5 w-5 items-center ${list.color}`}>
-              {list.icon}
+              <Folder size={17} />
             </span>
 
             <span className="flex-1">{list.name}</span>

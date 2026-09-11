@@ -1,13 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  BookOpen,
-  Briefcase,
-  Heart,
-  ListChecks,
-  Plus,
-  User,
-} from "lucide-react";
+import { ListChecks, Plus } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
 import TaskItem from "./components/TaskItem";
 import { useNotifications } from "./hooks/useNotifications";
@@ -16,6 +9,10 @@ import Sidebar from "./components/Sidebar";
 import MobileNav from "./components/MobileNav";
 import TaskModal from "./components/TaskModal";
 import { useSidebarSwipe } from "./hooks/useSidebarSwipe";
+import FeedbackModal from "./components/FeedbackModal";
+import { useFeedback } from "./hooks/useFeedback";
+import { useLists } from "./hooks/useLists";
+import ListModal from "./components/ListModal";
 
 export default function App() {
   const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
@@ -27,32 +24,7 @@ export default function App() {
 
   const [filter, setFilter] = useState<TFilters>("overview");
 
-  const [lists, setLists] = useState<List[]>([
-    {
-      id: "personal",
-      name: "Personal",
-      icon: <User />,
-      color: "text-violet-500",
-    },
-    {
-      id: "work",
-      name: "Work",
-      icon: <Briefcase />,
-      color: "text-blue-500",
-    },
-    {
-      id: "study",
-      name: "Study",
-      icon: <BookOpen />,
-      color: "text-amber-500",
-    },
-    {
-      id: "wishlist",
-      name: "Wishlist",
-      icon: <Heart />,
-      color: "text-rose-500",
-    },
-  ]);
+  const { lists, addList, editList, removeList } = useLists();
 
   const filteredTasks = useMemo(
     () => getFilteredTasks(selectedList),
@@ -66,6 +38,20 @@ export default function App() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const { feedback, showFeedback, hideFeedback } = useFeedback();
+
+  const [listToDelete, setListToDelete] = useState<List | null>(null);
+
+  const [listModal, setListModal] = useState<{
+    open: boolean;
+    mode: "create" | "edit";
+    list: List | null;
+  }>({
+    open: false,
+    mode: "create",
+    list: null,
+  });
 
   function handleAdd(task: Task) {
     addTask(task);
@@ -117,15 +103,38 @@ export default function App() {
     enabled: !sidebarOpen,
   });
 
+  const handleSaveList = (name: string) => {
+    if (listModal.mode === "create") {
+      return addList(name);
+    }
+
+    if (listModal.list) {
+      return editList(listModal.list.id, name);
+    }
+  };
+
+  const handleDeleteList = (list: List) => {
+    showFeedback(
+      "Remove List",
+      "Are you sure you want to remove this list? This action cannot be undone.",
+      "warning",
+    );
+    setListToDelete(list);
+  };
+
   return (
-    <div className="min-h-screen flex">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar
         open={sidebarOpen}
         setOpen={setSidebarOpen}
         lists={lists}
-        setLists={setLists}
         filter={filter}
         setFilter={setFilter}
+        onCreateList={() =>
+          setListModal({ open: true, mode: "create", list: null })
+        }
+        onEditList={(list) => setListModal({ open: true, mode: "edit", list })}
+        onDeleteList={(list) => handleDeleteList(list)}
         selectedList={selectedList}
         setSelectedList={setSelectedList}
         tasks={tasks}
@@ -133,103 +142,80 @@ export default function App() {
         numCompletedTasks={completedTasks.length}
       />
 
-      <div className="w-full max-w-4xl space-y-6 pt-18 md:py-8 md:px-12 px-6 font-medium touch-pan-y">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl md:text-lg tracking-tight">
-              {welcomeMessage()}, Daniel! 👋
-            </h1>
-            <p className="text-muted text-sm md:text-xs capitalize">
-              {new Date().toLocaleDateString("pt-PT", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-              })}
-            </p>
+      <main className="min-w-0 flex-1 h-screen overflow-y-auto touch-pan-y">
+        <div className="w-full max-w-4xl space-y-6 px-6 pt-18 font-medium md:px-12 md:py-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl md:text-lg tracking-tight">
+                {welcomeMessage()}, Daniel! 👋
+              </h1>
+              <p className="text-muted text-sm md:text-xs capitalize">
+                {new Date().toLocaleDateString("pt-PT", {
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                })}
+              </p>
+            </div>
+
+            <button
+              onClick={() => setIsCreateTaskOpen(true)}
+              className="btn-primary p-2 hidden md:block"
+            >
+              <span className="font-medium text-sm flex items-center gap-2 ">
+                <Plus size={18} strokeWidth={2} />
+                New Task
+              </span>
+            </button>
           </div>
 
-          <button
-            onClick={() => setIsCreateTaskOpen(true)}
-            className="btn-primary p-2 hidden md:block"
-          >
-            <span className="font-medium text-sm flex items-center gap-2 ">
-              <Plus size={18} strokeWidth={2} />
-              New Task
-            </span>
-          </button>
-        </div>
+          {isCreateTaskOpen && (
+            <TaskModal
+              mode="create"
+              lists={lists}
+              onSave={handleAdd}
+              onClose={() => setIsCreateTaskOpen(false)}
+            />
+          )}
 
-        {isCreateTaskOpen && (
-          <TaskModal
-            mode="create"
-            lists={lists}
-            onSave={handleAdd}
-            onClose={() => setIsCreateTaskOpen(false)}
-          />
-        )}
+          {editingTask && (
+            <TaskModal
+              mode="edit"
+              task={editingTask}
+              lists={lists}
+              onSave={handleEdit}
+              onClose={() => setEditingTask(null)}
+            />
+          )}
 
-        {editingTask && (
-          <TaskModal
-            mode="edit"
-            task={editingTask}
-            lists={lists}
-            onSave={handleEdit}
-            onClose={() => setEditingTask(null)}
-          />
-        )}
-
-        <div className="space-y-6 pb-6 h-full">
-          <AnimatePresence mode="popLayout">
-            {filteredTasks.length === 0 ? (
-              <motion.div
-                key="empty"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center py-12 text-muted"
-              >
-                <ListChecks size={32} className="mb-2 opacity-20" />
-                <p className="text-sm">
-                  No {filter !== "overview" ? filter : ""} tasks
-                </p>
-              </motion.div>
-            ) : (
-              <div className="space-y-6">
-                {activeTasks.length > 0 && filter !== "completed" && (
-                  <motion.div
-                    key="active"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="space-y-1"
-                  >
-                    <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
-                      {activeTasks.length} Active
-                    </div>
-                    {activeTasks.map((task) => (
-                      <TaskItem
-                        key={task.id}
-                        task={task}
-                        onToggle={toggleTask}
-                        onEdit={() => setEditingTask(task)}
-                        onDuplicate={() => handleDuplicate(task)}
-                        onRemove={removeTask}
-                      />
-                    ))}
-                  </motion.div>
-                )}
-
-                {completedTasks.length > 0 && filter !== "active" && (
-                  <motion.div
-                    key="completed"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
-                      {completedTasks.length} Completed
-                    </div>
-                    <div className="space-y-1 opacity-70">
-                      {completedTasks.map((task) => (
+          <div className="space-y-6 pb-26 flex-1">
+            <AnimatePresence mode="popLayout">
+              {filteredTasks.length === 0 ? (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex flex-col items-center py-12 text-muted"
+                >
+                  <ListChecks size={32} className="mb-2 opacity-20" />
+                  <p className="text-sm">
+                    No {filter !== "overview" ? filter : ""} tasks
+                  </p>
+                </motion.div>
+              ) : (
+                <div className="space-y-6">
+                  {activeTasks.length > 0 && filter !== "completed" && (
+                    <motion.div
+                      key="active"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="space-y-1"
+                    >
+                      <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
+                        {activeTasks.length} Active
+                      </div>
+                      {activeTasks.map((task) => (
                         <TaskItem
                           key={task.id}
                           task={task}
@@ -239,20 +225,72 @@ export default function App() {
                           onRemove={removeTask}
                         />
                       ))}
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            )}
-          </AnimatePresence>
+                    </motion.div>
+                  )}
+
+                  {completedTasks.length > 0 && filter !== "active" && (
+                    <motion.div
+                      key="completed"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
+                        {completedTasks.length} Completed
+                      </div>
+                      <div className="space-y-1 opacity-70">
+                        {completedTasks.map((task) => (
+                          <TaskItem
+                            key={task.id}
+                            task={task}
+                            onToggle={toggleTask}
+                            onEdit={() => setEditingTask(task)}
+                            onDuplicate={() => handleDuplicate(task)}
+                            onRemove={removeTask}
+                          />
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
+      </main>
+
       <MobileNav
         onHome={() => setFilter("overview")}
         onTasks={() => setFilter("active")}
         onCalendar={() => {}}
         onSettings={() => {}}
         onAddTask={() => setIsCreateTaskOpen(true)}
+      />
+      <FeedbackModal
+        open={feedback.open}
+        title={feedback.title}
+        message={feedback.message}
+        type={feedback.type}
+        onClose={hideFeedback}
+        onConfirm={() => {
+          if (!listToDelete) return;
+          removeList(listToDelete.id);
+          if (selectedList === listToDelete.id) {
+            setSelectedList("");
+          }
+        }}
+      />
+      <ListModal
+        open={listModal.open}
+        mode={listModal.mode}
+        initialName={listModal.list?.name ?? ""}
+        onClose={() =>
+          setListModal((prev) => ({
+            ...prev,
+            open: false,
+          }))
+        }
+        onSave={handleSaveList}
       />
     </div>
   );

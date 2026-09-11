@@ -1,5 +1,3 @@
-"use client";
-
 import { Clock3 } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 

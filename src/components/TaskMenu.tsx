@@ -1,5 +1,3 @@
-"use client";
-
 import { Copy, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 

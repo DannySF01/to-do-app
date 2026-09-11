@@ -15,8 +15,7 @@ export interface Task {
 export interface List {
   id: string;
   name: string;
-  icon: React.ReactNode;
-  color: string;
+  color?: string;
 }
 
 export type TFilters = "overview" | "active" | "completed";

@@ -1,5 +1,3 @@
-"use client";
-
 import { Flag } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 import type { TaskPriority } from "../types/types";

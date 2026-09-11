@@ -1,5 +1,3 @@
-"use client";
-
 import { CalendarDays } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 

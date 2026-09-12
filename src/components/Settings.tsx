@@ -15,6 +15,7 @@ import { useTheme } from "../hooks/useTheme";
 import Toggle from "./Toggle";
 import { usePWA } from "../hooks/usePWA";
 import Select from "./Select";
+import { useNotifications } from "../hooks/useNotifications";
 
 interface SettingsProps {
   onBack: () => void;
@@ -23,9 +24,19 @@ interface SettingsProps {
 export default function Settings({ onBack }: SettingsProps) {
   const { theme, setTheme } = useTheme();
   const [language, setLanguage] = useState("en");
-  const [notifications, setNotifications] = useState(true);
 
   const { isInstallable, install } = usePWA();
+
+  const { supported, subscribed, enableNotifications, disableNotifications } =
+    useNotifications();
+
+  const handleChange = async () => {
+    if (subscribed) {
+      await disableNotifications();
+    } else {
+      await enableNotifications();
+    }
+  };
 
   return (
     <div className=" w-full max-w-3xl px-6 pb-26 pt-18 md:px-10 md:py-6">
@@ -83,7 +94,13 @@ export default function Settings({ onBack }: SettingsProps) {
             title="Enable Notifications"
             description="Receive notifications for upcoming tasks"
           >
-            <Toggle checked={notifications} onChange={setNotifications} />
+            {supported ? (
+              <Toggle checked={subscribed} onChange={handleChange} />
+            ) : (
+              <span className="text-sm font-medium text-muted">
+                Not supported
+              </span>
+            )}
           </SettingsRow>
         </SettingsSection>
 

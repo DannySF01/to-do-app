@@ -36,3 +36,12 @@ export type TaskPicker =
   | "project"
   | "repeat"
   | null;
+
+export type ReminderOption =
+  | "none"
+  | "at_time"
+  | "5m"
+  | "15m"
+  | "30m"
+  | "1h"
+  | "1d";

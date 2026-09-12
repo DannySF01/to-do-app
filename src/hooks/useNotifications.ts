@@ -1,33 +1,109 @@
+import { useCallback, useEffect, useState } from "react";
+import OneSignal from "react-onesignal";
+import { initOneSignal } from "../lib/oneSignal";
+
 export function useNotifications() {
-  const requestPermission = async () => {
-    if (!("Notification" in window)) return;
+  const [initialized, setInitialized] = useState(false);
+  const [permission, setPermission] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
+  const [supported, setSupported] = useState(false);
 
-    if (Notification.permission !== "granted") {
-      const permission = await Notification.requestPermission();
+  useEffect(() => {
+    let mounted = true;
 
-      if (permission === "granted") {
-        console.log("Notificações autorizadas");
+    const initialize = async () => {
+      await initOneSignal();
+
+      if (!mounted) return;
+
+      try {
+        const isSupported = OneSignal.Notifications.isPushSupported();
+
+        const hasPermission = OneSignal.Notifications.permission;
+
+        const isSubscribed = OneSignal.User.PushSubscription.optedIn;
+
+        setSupported(isSupported);
+        setPermission(hasPermission);
+        setSubscribed(isSubscribed || false);
+        setInitialized(true);
+      } catch (error) {
+        console.error("Failed to read OneSignal state:", error);
       }
-    }
-  };
+    };
 
-  const sendSystemNotification = async (title: string, body: string) => {
-    if (Notification.permission === "granted") {
-      const registration = await navigator.serviceWorker.ready;
+    initialize();
 
-      registration.showNotification(title, {
-        body,
-        icon: "/public/icon.svg",
-        vibrate: [200, 100, 200],
-        badge: "/public/icon.svg",
-        tag: "task",
-        renotify: true,
-      } as NotificationOptions);
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const requestPermission = useCallback(async () => {
+    try {
+      if (!initialized) {
+        await initOneSignal();
+      }
+
+      await OneSignal.Notifications.requestPermission();
+
+      const hasPermission = OneSignal.Notifications.permission;
+
+      const isSubscribed = OneSignal.User.PushSubscription.optedIn;
+
+      setPermission(hasPermission);
+      setSubscribed(isSubscribed || false);
+
+      return hasPermission;
+    } catch (error) {
+      console.error("Failed to request notification permission:", error);
+
+      return false;
     }
-  };
+  }, [initialized]);
+
+  const enableNotifications = useCallback(async () => {
+    try {
+      if (!initialized) {
+        await initOneSignal();
+      }
+
+      await OneSignal.User.PushSubscription.optIn();
+
+      setPermission(OneSignal.Notifications.permission);
+
+      setSubscribed(OneSignal.User.PushSubscription.optedIn || false);
+
+      return true;
+    } catch (error) {
+      console.error("Failed to enable notifications:", error);
+
+      return false;
+    }
+  }, [initialized]);
+
+  const disableNotifications = useCallback(async () => {
+    try {
+      await OneSignal.User.PushSubscription.optOut();
+
+      setSubscribed(false);
+
+      return true;
+    } catch (error) {
+      console.error("Failed to disable notifications:", error);
+
+      return false;
+    }
+  }, []);
 
   return {
+    initialized,
+    supported,
+    permission,
+    subscribed,
+
     requestPermission,
-    sendSystemNotification,
+    enableNotifications,
+    disableNotifications,
   };
 }

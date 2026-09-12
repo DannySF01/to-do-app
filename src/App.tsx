@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ListChecks, Plus } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
@@ -20,7 +20,7 @@ export default function App() {
   const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
     useTasks();
 
-  const { requestPermission, sendSystemNotification } = useNotifications();
+  useNotifications();
 
   const [selectedList, setSelectedList] = useState("");
 
@@ -57,7 +57,7 @@ export default function App() {
 
   function handleAdd(task: Task) {
     addTask(task);
-    requestPermission();
+    //requestPermission();
   }
 
   function handleEdit(task: Task) {
@@ -67,27 +67,6 @@ export default function App() {
   function handleDuplicate(task: Task) {
     addTask({ ...task, id: crypto.randomUUID() });
   }
-
-  useEffect(() => {
-    const checkInterval = setInterval(() => {
-      const now = new Date();
-
-      tasks.forEach((task) => {
-        if (task.date && task.completed) {
-          const dueDate = new Date(task.date);
-
-          if (
-            dueDate.getTime() <= now.getTime() &&
-            dueDate.getTime() > now.getTime() - 60000
-          ) {
-            sendSystemNotification("Tarefa Pendente!", task.text);
-          }
-        }
-      });
-    }, 60000);
-
-    return () => clearInterval(checkInterval);
-  }, [tasks]);
 
   const welcomeMessage = () => {
     const hours = new Date().getHours();

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ListChecks, Plus } from "lucide-react";
+import { CheckCircle2, Plus } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
 import TaskItem from "./components/TaskItem";
 import { useNotifications } from "./hooks/useNotifications";
@@ -15,6 +15,7 @@ import { useLists } from "./hooks/useLists";
 import ListModal from "./components/ListModal";
 import Settings from "./components/Settings";
 import { useTheme } from "./hooks/useTheme";
+import { EmptyState } from "./components/EmptyState";
 
 export default function App() {
   const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
@@ -158,17 +159,10 @@ export default function App() {
             <div className="space-y-6 pb-26 flex-1">
               <AnimatePresence mode="popLayout">
                 {filteredTasks.length === 0 ? (
-                  <motion.div
-                    key="empty"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="flex flex-col items-center py-12 text-muted"
-                  >
-                    <ListChecks size={32} className="mb-2 opacity-20" />
-                    <p className="text-sm">
-                      No {view !== "overview" ? view : ""} tasks
-                    </p>
-                  </motion.div>
+                  <EmptyState
+                    title="No tasks in Work"
+                    description="Add a task to this list to see it here."
+                  />
                 ) : (
                   <div className="space-y-6">
                     {activeTasks.length > 0 && view !== "completed" && (
@@ -218,6 +212,14 @@ export default function App() {
                           ))}
                         </div>
                       </motion.div>
+                    )}
+
+                    {completedTasks.length === 0 && view === "completed" && (
+                      <EmptyState
+                        icon={CheckCircle2}
+                        title="Nothing completed yet"
+                        description="Finished tasks will show up here."
+                      />
                     )}
                   </div>
                 )}

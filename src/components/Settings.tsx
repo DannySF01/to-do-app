@@ -10,12 +10,13 @@ import {
   MonitorDown,
   ArrowLeft,
 } from "lucide-react";
-import { useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import Toggle from "./Toggle";
 import { usePWA } from "../hooks/usePWA";
 import Select from "./Select";
 import { useNotifications } from "../hooks/useNotifications";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 interface SettingsProps {
   onBack: () => void;
@@ -23,7 +24,9 @@ interface SettingsProps {
 
 export default function Settings({ onBack }: SettingsProps) {
   const { theme, setTheme } = useTheme();
-  const [language, setLanguage] = useState("en");
+
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language.split("-")[0];
 
   const { isInstallable, install } = usePWA();
 
@@ -51,65 +54,66 @@ export default function Settings({ onBack }: SettingsProps) {
 
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">
+          {t("settings.title")}
+        </h1>
 
-        <p className="mt-1 text-sm text-muted">Manage your preferences</p>
+        <p className="mt-1 text-sm text-muted">{t("settings.subtitle")}</p>
       </div>
 
       <div className="space-y-8">
         {/* Appearance */}
-        <SettingsSection title="Appearance">
+        <SettingsSection title={t("settings.appearance.section")}>
           <SettingsRow
             icon={<Palette size={17} />}
-            title="Theme"
-            description="Choose how the app looks"
+            title={t("settings.appearance.theme")}
+            description={t("settings.appearance.themeDescription")}
           >
             <ThemeSelector value={theme} onChange={setTheme} />
           </SettingsRow>
         </SettingsSection>
 
         {/* Language */}
-        <SettingsSection title="Language">
+        <SettingsSection title={t("settings.language.section")}>
           <SettingsRow
             icon={<Monitor size={17} />}
-            title="Language"
-            description="Choose your preferred language"
+            title={t("settings.language.label")}
+            description={t("settings.language.description")}
           >
             <Select
-              value={language}
+              value={currentLanguage}
               options={[
-                { value: "en", label: "English" },
-                { value: "es", label: "Spanish" },
-                { value: "fr", label: "French" },
+                { value: "en", label: t("settings.language.options.en") },
+                { value: "pt", label: t("settings.language.options.pt") },
               ]}
-              onSelect={(lang) => setLanguage(lang)}
+              onSelect={(lang) => i18n.changeLanguage(lang)}
             />
           </SettingsRow>
         </SettingsSection>
 
         {/* Notifications */}
-        <SettingsSection title="Notifications">
+        <SettingsSection title={t("settings.notifications.section")}>
           <SettingsRow
             icon={<Bell size={17} />}
-            title="Enable Notifications"
-            description="Receive notifications for upcoming tasks"
+            title={t("settings.notifications.enable")}
+            description={t("settings.notifications.description")}
           >
             {supported ? (
               <Toggle checked={subscribed} onChange={handleChange} />
             ) : (
               <span className="text-sm font-medium text-muted">
-                Not supported
+                {t("common.notSupported")}
               </span>
             )}
           </SettingsRow>
         </SettingsSection>
 
         {/* App */}
-        <SettingsSection title="App">
+        <SettingsSection title={t("settings.app.section")}>
           <SettingsRow
             icon={<Download size={17} />}
-            title="Install App"
-            description="Install To-Do-App on your device"
+            title={t("settings.app.install")}
+            description={t("settings.app.installDescription")}
           >
             <span className="text-sm font-medium text-muted">
               {isInstallable ? (
@@ -120,38 +124,40 @@ export default function Settings({ onBack }: SettingsProps) {
                   <MonitorDown size={18} />
                 </button>
               ) : (
-                <span>Not available</span>
+                <span className="text-sm font-medium text-muted">
+                  {t("common.notSupported")}
+                </span>
               )}
             </span>
           </SettingsRow>
 
           <SettingsRow
             icon={<Info size={17} />}
-            title="About"
-            description="Information about this app"
+            title={t("settings.app.about")}
+            description={t("settings.app.aboutDescription")}
           >
             <span className="text-sm font-medium text-muted">v0.0.1</span>
           </SettingsRow>
         </SettingsSection>
 
         {/* Data & Storage */}
-        <SettingsSection title="Data & Storage">
+        <SettingsSection title={t("settings.dataStorage.section")}>
           <SettingsRow
             icon={<Info size={17} />}
-            title="Erase Data"
-            description="Permanently erase all data"
+            title={t("settings.dataStorage.eraseData")}
+            description={t("settings.dataStorage.eraseDataDescription")}
           >
             <button
               onClick={() => {}}
               className="text-sm rounded-lg border text-white border-border bg-red-500 px-4 py-2 font-medium"
             >
-              Erase
+              {t("settings.dataStorage.eraseData")}
             </button>
           </SettingsRow>
           <SettingsRow
             icon={<Info size={17} />}
-            title="Storage Usage"
-            description="Total storage used by this app"
+            title={t("settings.dataStorage.storageUsage")}
+            description={t("settings.dataStorage.storageUsageDescription")}
           >
             <span className="flex items-center gap-2 text-muted">
               <span className="text-sm font-medium">0 B</span>
@@ -173,7 +179,7 @@ export default function Settings({ onBack }: SettingsProps) {
           "
         >
           <RotateCcw size={15} />
-          Reset settings
+          {t("settings.resetSettings")}
         </button>
       </div>
     </div>
@@ -193,7 +199,7 @@ function SettingsSection({
         {title}
       </h2>
 
-      <div className="overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="rounded-2xl border border-border bg-surface">
         {children}
       </div>
     </section>
@@ -275,17 +281,17 @@ function ThemeSelector({
   const options = [
     {
       value: "system" as const,
-      label: "System",
+      label: t("settings.appearance.system"),
       icon: Monitor,
     },
     {
       value: "light" as const,
-      label: "Light",
+      label: t("settings.appearance.light"),
       icon: Sun,
     },
     {
       value: "dark" as const,
-      label: "Dark",
+      label: t("settings.appearance.dark"),
       icon: Moon,
     },
   ];

@@ -16,6 +16,8 @@ import ListModal from "./components/ListModal";
 import Settings from "./components/Settings";
 import { useTheme } from "./hooks/useTheme";
 import { EmptyState } from "./components/EmptyState";
+import { useTranslation } from "react-i18next";
+import i18n from "./i18n";
 
 export default function App() {
   const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
@@ -56,9 +58,10 @@ export default function App() {
     list: null,
   });
 
+  const { t } = useTranslation();
+
   function handleAdd(task: Task) {
     addTask(task);
-    //requestPermission();
   }
 
   function handleEdit(task: Task) {
@@ -70,14 +73,17 @@ export default function App() {
   }
 
   const welcomeMessage = () => {
+    const name = "Daniel";
+    let message;
     const hours = new Date().getHours();
     if (hours >= 5 && hours < 12) {
-      return "Good Morning";
+      message = t("greeting.morning");
     } else if (hours >= 12 && hours < 18) {
-      return "Good Afternoon";
+      message = t("greeting.afternoon");
     } else {
-      return "Good Evening";
+      message = t("greeting.evening");
     }
+    return message + ", " + name + "! 👋";
   };
 
   useSidebarSwipe({
@@ -99,8 +105,8 @@ export default function App() {
 
   const handleDeleteList = (list: List) => {
     showFeedback(
-      "Remove List",
-      "Are you sure you want to remove this list? This action cannot be undone.",
+      t("lists.deleteList"),
+      t("lists.deleteListConfirmDescription"),
       "warning",
     );
     setListToDelete(list);
@@ -134,10 +140,10 @@ export default function App() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl md:text-lg tracking-tight">
-                  {welcomeMessage()}, Daniel! 👋
+                  {welcomeMessage()}
                 </h1>
                 <p className="text-muted text-sm md:text-xs capitalize">
-                  {new Date().toLocaleDateString("pt-PT", {
+                  {new Date().toLocaleDateString(i18n.language, {
                     weekday: "long",
                     day: "numeric",
                     month: "long",
@@ -149,9 +155,9 @@ export default function App() {
                 onClick={() => setIsCreateTaskOpen(true)}
                 className="btn-primary p-2 hidden md:block"
               >
-                <span className="font-medium text-sm flex items-center gap-2 ">
+                <span className="font-medium text-sm flex items-center gap-2 pr-0.5">
                   <Plus size={18} strokeWidth={2} />
-                  New Task
+                  {t("newTask")}
                 </span>
               </button>
             </div>
@@ -160,8 +166,8 @@ export default function App() {
               <AnimatePresence mode="popLayout">
                 {filteredTasks.length === 0 ? (
                   <EmptyState
-                    title="No tasks in Work"
-                    description="Add a task to this list to see it here."
+                    title={t("emptyState.noTasks.title")}
+                    description={t("emptyState.noTasks.description")}
                   />
                 ) : (
                   <div className="space-y-6">
@@ -174,7 +180,7 @@ export default function App() {
                         className="space-y-1"
                       >
                         <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
-                          {activeTasks.length} Active
+                          {activeTasks.length} {t("views.active")}
                         </div>
                         {activeTasks.map((task) => (
                           <TaskItem
@@ -197,7 +203,7 @@ export default function App() {
                         exit={{ opacity: 0 }}
                       >
                         <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
-                          {completedTasks.length} Completed
+                          {completedTasks.length} {t("views.completed")}
                         </div>
                         <div className="space-y-1 opacity-70">
                           {completedTasks.map((task) => (
@@ -217,8 +223,8 @@ export default function App() {
                     {completedTasks.length === 0 && view === "completed" && (
                       <EmptyState
                         icon={CheckCircle2}
-                        title="Nothing completed yet"
-                        description="Finished tasks will show up here."
+                        title={t("emptyState.noCompleted.title")}
+                        description={t("emptyState.noCompleted.description")}
                       />
                     )}
                   </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Folder, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { t } from "i18next";
 
 interface ListModalProps {
   open: boolean;
@@ -100,13 +101,13 @@ export default function ListModal({
             <div className="flex items-start justify-between">
               <div>
                 <h2 className="text-base font-semibold tracking-tight">
-                  {isEdit ? "Rename List" : "New List"}
+                  {isEdit ? t("lists.renameList") : t("lists.newListTitle")}
                 </h2>
 
                 <p className="mt-1 text-sm text-muted">
                   {isEdit
-                    ? "Choose a new name for your list."
-                    : "Create a list to organize your tasks."}
+                    ? t("lists.renameListDescription")
+                    : t("lists.newListDescription")}
                 </p>
               </div>
 
@@ -131,7 +132,7 @@ export default function ListModal({
                 htmlFor="list-name"
                 className="mb-2 block text-xs font-medium"
               >
-                List name
+                {t("lists.newListPlaceholder")}
               </label>
 
               <input
@@ -198,9 +199,11 @@ export default function ListModal({
                 </div>
 
                 <div>
-                  <p className="text-sm font-medium">Folder</p>
+                  <p className="text-sm font-medium">{t("lists.folder")}</p>
 
-                  <p className="text-xs text-muted">Default list icon</p>
+                  <p className="text-xs text-muted">
+                    {t("lists.folderDescription")}
+                  </p>
                 </div>
               </div>
             )}
@@ -219,7 +222,7 @@ export default function ListModal({
                   hover:text-foreground
                 "
               >
-                Cancel
+                {t("common.cancel")}
               </button>
 
               <button
@@ -227,7 +230,7 @@ export default function ListModal({
                 onClick={handleSave}
                 className="btn-primary px-4 py-2 text-sm"
               >
-                {isEdit ? "Save Changes" : "Create List"}
+                {isEdit ? t("common.save") : t("lists.create")}
               </button>
             </div>
           </motion.div>

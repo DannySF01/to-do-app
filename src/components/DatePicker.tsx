@@ -1,37 +1,58 @@
 import { CalendarDays } from "lucide-react";
 import TaskPicker from "./TaskPicker";
+import { t } from "i18next";
 
 interface DatePickerProps {
   value: string | undefined;
+  label: string;
   onChange: (value: string | null) => void;
   onClose: () => void;
 }
 
-const presets = [
-  { value: "today", label: "Today" },
-  { value: "tomorrow", label: "Tomorrow" },
-  { value: "next-week", label: "Next week" },
-];
+function resolveOption(option: "today" | "tomorrow" | "nextWeek"): string {
+  const date = new Date();
+  date.setHours(0, 0, 0, 0);
+  if (option === "tomorrow") date.setDate(date.getDate() + 1);
+  if (option === "nextWeek") date.setDate(date.getDate() + 7);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function isValidDate(iso: string): boolean {
+  const year = Number(iso.slice(0, 4));
+  return year >= 2026 && year <= 2100;
+}
 
 export default function DatePicker({
   value,
+  label,
   onChange,
   onClose,
 }: DatePickerProps) {
+  const options: { value: "today" | "tomorrow" | "nextWeek"; label: string }[] =
+    [
+      { value: "today", label: t("date.today") },
+      { value: "tomorrow", label: t("date.tomorrow") },
+      { value: "nextWeek", label: t("date.nextWeek") },
+    ];
+
   return (
     <TaskPicker
-      title="Date"
+      title={label}
       icon={<CalendarDays size={18} />}
       selected={value}
       onClose={onClose}
     >
       <div className="space-y-1">
-        {presets.map((preset) => (
+        {options.map((option) => (
           <button
-            key={preset.value}
+            key={option.value}
             type="button"
             onClick={() => {
-              onChange(preset.value);
+              onChange(resolveOption(option.value));
               onClose();
             }}
             className={`
@@ -45,13 +66,13 @@ export default function DatePicker({
               text-left
               text-sm
               transition
-              ${value === preset.value ? "bg-muted/20 font-medium" : "hover:bg-muted/10"}
+              ${value === option.value ? "bg-muted/20 font-medium" : "hover:bg-muted/10"}
             `}
           >
-            {preset.label}
+            {option.label}
 
-            {value === preset.value && (
-              <span className="text-xs">Selected</span>
+            {value === option.value && (
+              <span className="text-xs">{t("common.selected")}</span>
             )}
           </button>
         ))}
@@ -61,16 +82,16 @@ export default function DatePicker({
 
       <label className="block">
         <span className="mb-2 block text-xs font-medium text-muted">
-          Custom date
+          {t("date.custom")}
         </span>
 
         <input
           type="date"
-          value={
-            value && !presets.some((item) => item.value === value) ? value : ""
-          }
+          min="2026-01-01"
+          max="2100-12-31"
           onChange={(e) => {
-            onChange(e.target.value || null);
+            if (!isValidDate(e.target.value)) return;
+            onChange(e.target.value);
             onClose();
           }}
           className="

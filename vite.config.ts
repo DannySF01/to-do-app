@@ -9,10 +9,10 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["public/icon.svg"],
+      includeAssets: ["icon.svg"],
       manifest: {
-        name: "to-do-app",
-        short_name: "to-do-app",
+        name: "To-Do App",
+        short_name: "To-Do App",
         theme_color: "#faf9f7",
         background_color: "#faf9f7",
         display: "standalone",
@@ -26,7 +26,7 @@ export default defineConfig({
             src: "/icon.svg",
             sizes: "512x512",
             type: "image/svg+xml",
-            purpose: "any maskable",
+            purpose: "maskable",
           },
         ],
       },

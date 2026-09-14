@@ -1,46 +1,49 @@
 import { Flag } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 import type { TaskPriority } from "../types/types";
+import { t } from "i18next";
 
 interface PriorityPickerProps {
   value: TaskPriority;
+  label: string;
   onChange: (value: TaskPriority) => void;
   onClose: () => void;
 }
 
-const priorities = [
-  {
-    value: "none" as const,
-    label: "No priority",
-    color: "bg-zinc-300",
-  },
-  {
-    value: "low" as const,
-    label: "Low",
-    color: "bg-green-500",
-  },
-  {
-    value: "medium" as const,
-    label: "Medium",
-    color: "bg-yellow-500",
-  },
-  {
-    value: "high" as const,
-    label: "High",
-    color: "bg-red-500",
-  },
-];
-
 export default function PriorityPicker({
   value,
+  label,
   onChange,
   onClose,
 }: PriorityPickerProps) {
+  const priorities = [
+    {
+      value: "none" as const,
+      label: t("priority.none"),
+      color: "bg-zinc-300",
+    },
+    {
+      value: "low" as const,
+      label: t("priority.low"),
+      color: "bg-green-500",
+    },
+    {
+      value: "medium" as const,
+      label: t("priority.medium"),
+      color: "bg-yellow-500",
+    },
+    {
+      value: "high" as const,
+      label: t("priority.high"),
+      color: "bg-red-500",
+    },
+  ];
+
   return (
     <TaskPicker
-      title="Priority"
+      title={label}
       icon={<Flag size={18} />}
-      selected={value}
+      selected={priorities.find((priority) => priority.value === value)?.label}
       onClose={onClose}
     >
       <div className="space-y-1">
@@ -71,7 +74,7 @@ export default function PriorityPicker({
             <span className="flex-1">{priority.label}</span>
 
             {value === priority.value && (
-              <span className="text-xs">Selected</span>
+              <span className="text-xs">{t("common.selected")}</span>
             )}
           </button>
         ))}

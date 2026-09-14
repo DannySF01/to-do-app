@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -83,7 +84,7 @@ export default function ListMenu({ onRename, onDelete }: ListMenuProps) {
             "
           >
             <Pencil size={15} strokeWidth={1.8} />
-            Rename
+            {t("common.rename")}
           </button>
 
           <button
@@ -98,7 +99,7 @@ export default function ListMenu({ onRename, onDelete }: ListMenuProps) {
             "
           >
             <Trash2 size={15} strokeWidth={1.8} />
-            Delete
+            {t("common.delete")}
           </button>
         </div>
       )}

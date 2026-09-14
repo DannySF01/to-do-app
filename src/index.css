@@ -52,7 +52,7 @@
 
 @layer base {
   * {
-    @apply transition-colors duration-300 scrollbar-mobile-hidden;
+    @apply scrollbar-mobile-hidden;
   }
 
   body {

@@ -1,31 +1,34 @@
 import { Repeat2 } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 import type { TaskRepeat } from "../types/types";
+import { t } from "i18next";
 
 interface RepeatPickerProps {
   value: TaskRepeat;
+  label: string;
   onChange: (value: TaskRepeat) => void;
   onClose: () => void;
 }
 
-const options = [
-  { value: "no" as const, label: "Does not repeat" },
-  { value: "daily" as const, label: "Every day" },
-  { value: "weekdays" as const, label: "Every weekday" },
-  { value: "weekly" as const, label: "Every week" },
-  { value: "monthly" as const, label: "Every month" },
-];
-
 export default function RepeatPicker({
   value,
+  label,
   onChange,
   onClose,
 }: RepeatPickerProps) {
+  const options = [
+    { value: "no" as const, label: t("repeat.none") },
+    { value: "daily" as const, label: t("repeat.daily") },
+    { value: "weekdays" as const, label: t("repeat.weekdays") },
+    { value: "weekly" as const, label: t("repeat.weekly") },
+    { value: "monthly" as const, label: t("repeat.monthly") },
+  ];
+
   return (
     <TaskPicker
-      title="Repeat"
+      title={label}
       icon={<Repeat2 size={18} />}
-      selected={value}
+      selected={options.find((option) => option.value === value)?.label}
       onClose={onClose}
     >
       <div className="space-y-1">
@@ -53,7 +56,7 @@ export default function RepeatPicker({
             <span className="flex-1">{option.label}</span>
 
             {value === option.value && (
-              <span className="text-xs">Selected</span>
+              <span className="text-xs">{t("common.selected")}</span>
             )}
           </button>
         ))}

@@ -15,6 +15,7 @@ import PriorityPicker from "./PriorityPicker";
 import ListPicker from "./ListPicker";
 import RepeatPicker from "./RepeatPicker";
 import type { List, Task, TaskPriority, TaskRepeat } from "../types/types";
+import { t } from "i18next";
 
 interface CreateTaskProps {
   mode: "create" | "edit";
@@ -48,9 +49,10 @@ export default function TaskModal({
   const options = [
     {
       icon: CalendarDays,
-      label: "Date",
+      key: "Date",
       component: (
         <DatePicker
+          label={t("task.dateLabel")}
           value={date}
           onChange={(e) => setDate(e || "")}
           onClose={() => {}}
@@ -59,9 +61,10 @@ export default function TaskModal({
     },
     {
       icon: Clock3,
-      label: "Time",
+      key: "Time",
       component: (
         <TimePicker
+          label={t("task.timeLabel")}
           value={time}
           onChange={(e) => setTime(e || "")}
           onClose={() => {}}
@@ -70,9 +73,10 @@ export default function TaskModal({
     },
     {
       icon: Flag,
-      label: "Priority",
+      key: "Priority",
       component: (
         <PriorityPicker
+          label={t("task.priorityLabel")}
           value={priority}
           onChange={(e) => setPriority(e)}
           onClose={() => {}}
@@ -81,9 +85,10 @@ export default function TaskModal({
     },
     {
       icon: Folder,
-      label: "List",
+      key: "List",
       component: (
         <ListPicker
+          label={t("task.listLabel")}
           lists={lists}
           value={list}
           onChange={(e) => setList(e)}
@@ -93,9 +98,10 @@ export default function TaskModal({
     },
     {
       icon: Repeat2,
-      label: "Repeat",
+      key: "Repeat",
       component: (
         <RepeatPicker
+          label={t("task.repeatLabel")}
           value={repeat}
           onChange={(e) => setRepeat(e)}
           onClose={() => {}}
@@ -147,7 +153,7 @@ export default function TaskModal({
           </button>
 
           <h1 className="text-[17px] font-semibold tracking-[-0.02em]">
-            New Task
+            {t("task.newTask")}
           </h1>
 
           <button
@@ -155,7 +161,7 @@ export default function TaskModal({
             disabled={!input.trim()}
             className="btn-primary"
           >
-            {mode === "edit" ? "Update" : "Save"}
+            {mode === "edit" ? t("common.update") : t("common.save")}
           </button>
         </header>
 
@@ -163,7 +169,7 @@ export default function TaskModal({
           <textarea
             onChange={(e) => setInput(e.target.value)}
             autoFocus
-            placeholder="What needs to be done?"
+            placeholder={t("task.placeholder")}
             value={input}
             className="mt-7
               w-full
@@ -180,7 +186,7 @@ export default function TaskModal({
           <div className="mt-3 overflow-hidden">
             {options.map((option) => {
               return (
-                <div key={option.label} className="mt-3">
+                <div key={option.key} className="mt-3">
                   {option.component}
                 </div>
               );
@@ -203,13 +209,11 @@ export default function TaskModal({
               <Bell size={18} />
             </span>
 
-            <span className="flex-1 text-sm font-medium">Remind me</span>
+            <span className="flex-1 text-sm font-medium">
+              {t("task.reminderLabel")}
+            </span>
 
-            <Toggle
-              checked={toggleReminder}
-              onChange={setToggleReminder}
-              label="Remind me"
-            />
+            <Toggle checked={toggleReminder} onChange={setToggleReminder} />
           </button>
         </div>
       </div>

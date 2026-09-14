@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { Copy, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -65,7 +66,7 @@ export default function TaskMenu({
                              hover:bg-surface-hover"
           >
             <Pencil className="h-4 w-4 text-muted" />
-            Edit task
+            {t("task.editTask")}
           </button>
 
           <button
@@ -79,7 +80,7 @@ export default function TaskMenu({
                              hover:bg-surface-hover"
           >
             <Copy className="h-4 w-4 text-muted" />
-            Duplicate
+            {t("task.duplicateTask")}
           </button>
 
           <div className="my-1.5 h-px bg-border" />
@@ -91,7 +92,7 @@ export default function TaskMenu({
                              hover:bg-red-500/10"
           >
             <Trash2 className="h-4 w-4" />
-            Delete task
+            {t("task.deleteTask")}
           </button>
         </div>
       )}

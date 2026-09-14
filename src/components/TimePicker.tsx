@@ -1,27 +1,30 @@
 import { Clock3 } from "lucide-react";
 import TaskPicker from "./TaskPicker";
+import { t } from "i18next";
 
 interface TimePickerProps {
   value: string | undefined;
+  label: string;
   onChange: (value: string | null) => void;
   onClose: () => void;
 }
 
 export default function TimePicker({
   value,
+  label,
   onChange,
   onClose,
 }: TimePickerProps) {
   return (
     <TaskPicker
-      title="Time"
+      title={label}
       icon={<Clock3 size={18} />}
       selected={value}
       onClose={onClose}
     >
       <label className="block">
         <span className="mb-2 block text-xs font-medium text-muted">
-          Select time
+          {t("time.select")}
         </span>
 
         <input
@@ -58,7 +61,7 @@ export default function TimePicker({
           hover:bg-muted/5
         "
       >
-        Remove time
+        {t("time.remove")}
       </button>
 
       <button
@@ -77,7 +80,7 @@ export default function TimePicker({
           hover:bg-zinc-800
         "
       >
-        Done
+        {t("common.done")}
       </button>
     </TaskPicker>
   );

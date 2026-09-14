@@ -1,0 +1,188 @@
+{
+  "greeting": {
+    "morning": "Bom dia",
+    "afternoon": "Boa tarde",
+    "evening": "Boa noite"
+  },
+  "views": {
+    "title": "Vistas",
+    "overview": "Visão geral",
+    "active": "Ativas",
+    "completed": "Concluídas",
+    "settings": "Definições",
+    "calendar": "Calendário"
+  },
+  "newTask": "Nova Tarefa",
+  "lists": {
+    "title": "Listas",
+    "create": "Criar Lista",
+
+    "newListTitle": "Nova Lista",
+    "newListDescription": "Cria uma lista para organizar as tuas tarefas",
+    "newListPlaceholder": "Nome da lista",
+
+    "renameList": "Renomear Lista",
+    "renameListDescription": "Escolhe um novo nome para a tua lista.",
+
+    "deleteList": "Remover Lista",
+    "deleteListConfirmDescription": "Tens a certeza de que queres remover esta lista? Esta ação não pode ser desfeita.",
+
+    "folder": "Pasta",
+    "folderDescription": "Ícone predefinido da lista",
+
+    "default": {
+      "personal": "Pessoal",
+      "work": "Trabalho",
+      "study": "Estudos",
+      "wishlist": "Lista de Desejos"
+    }
+  },
+  "task": {
+    "newTask": "Nova Tarefa",
+    "editTask": "Editar Tarefa",
+    "duplicateTask": "Duplicar Tarefa",
+    "deleteTask": "Remover Tarefa",
+
+    "title": "Título",
+    "titlePlaceholder": "O que precisas de fazer?",
+
+    "placeholder": "O que precisa de ser feito?",
+
+    "dateLabel": "Data",
+    "timeLabel": "Hora",
+    "priorityLabel": "Prioridade",
+    "listLabel": "Lista",
+    "repeatLabel": "Repetir",
+    "reminderLabel": "Lembrar-me",
+
+    "selectList": "Seleciona uma lista",
+    "noList": "Sem lista",
+
+    "dueDate": "Data limite",
+    "dueTime": "Hora",
+    "noDueDate": "Sem data limite",
+    "addDate": "Adicionar data",
+    "addTime": "Adicionar hora",
+
+    "reminder": {
+      "none": "Nenhum",
+      "atTime": "À hora da tarefa",
+      "5min": "5 minutos antes",
+      "30min": "30 minutos antes",
+      "1hour": "1 hora antes",
+      "1day": "1 dia antes"
+    },
+
+    "markComplete": "Marcar como concluída",
+    "markIncomplete": "Marcar como não concluída",
+    "duplicate": "Duplicar tarefa",
+    "delete": "Eliminar tarefa",
+    "edit": "Editar tarefa",
+    "deleteConfirmTitle": "Eliminar esta tarefa?",
+    "deleteConfirmDescription": "Esta ação não pode ser desfeita.",
+    "createdAt": "Criada em {{date}}",
+    "updatedAt": "Atualizada em {{date}}"
+  },
+  "emptyState": {
+    "noTasks": {
+      "title": "Ainda sem tarefas",
+      "description": "Adiciona uma tarefa a esta lista para a veres aqui."
+    },
+    "noCompleted": {
+      "title": "Ainda nada concluído",
+      "description": "As tarefas terminadas vão aparecer aqui."
+    }
+  },
+  "settings": {
+    "title": "Definições",
+    "subtitle": "Gere as tuas preferências",
+    "back": "Voltar",
+    "appearance": {
+      "section": "Aparência",
+      "theme": "Tema",
+      "themeDescription": "Escolhe o aspeto da aplicação",
+      "system": "Sistema",
+      "light": "Claro",
+      "dark": "Escuro"
+    },
+    "language": {
+      "section": "Idioma",
+      "label": "Idioma",
+      "description": "Escolhe o teu idioma preferido",
+      "options": {
+        "en": "Inglês",
+        "pt": "Português"
+      }
+    },
+    "notifications": {
+      "section": "Notificações",
+      "enable": "Ativar Notificações",
+      "description": "Recebe notificações para tarefas próximas"
+    },
+    "app": {
+      "section": "Aplicação",
+      "install": "Instalar Aplicação",
+      "installDescription": "Instala To-Do App no teu dispositivo",
+      "notAvailable": "Não disponível",
+      "about": "Sobre",
+      "aboutDescription": "Informações sobre esta aplicação",
+      "version": "Versão"
+    },
+    "dataStorage": {
+      "section": "Dados e Armazenamento",
+      "eraseData": "Apagar Dados",
+      "eraseDataDescription": "Apaga permanentemente todos os dados",
+      "erase": "Apagar",
+      "storageUsage": "Uso de Armazenamento",
+      "storageUsageDescription": "Armazenamento total usado por esta aplicação"
+    },
+    "resetSettings": "Repor Definições"
+  },
+  "account": {
+    "freeAccount": "Conta gratuita",
+    "signIn": "Iniciar sessão",
+    "signOut": "Terminar sessão"
+  },
+  "common": {
+    "add": "Adicionar",
+    "save": "Guardar",
+    "update": "Atualizar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "search": "Pesquisar",
+    "loading": "A carregar...",
+    "error": "Algo correu mal",
+    "retry": "Tentar novamente",
+    "selected": "Selecionado",
+    "done": "Concluído",
+    "notSupported": "Não suportado",
+    "rename": "Renomear"
+  },
+  "date": {
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "nextWeek": "Próxima semana",
+    "custom": "Data personalizada"
+  },
+  "time": {
+    "select": "Selecionar hora",
+    "remove": "Remover hora"
+  },
+  "priority": {
+    "none": "Sem prioridade",
+    "low": "Baixa",
+    "medium": "Média",
+    "high": "Alta"
+  },
+  "repeat": {
+    "none": "Não repete",
+    "daily": "Diariamente",
+    "weekdays": "Dias úteis",
+    "weekly": "Semanalmente",
+    "monthly": "Mensalmente"
+  }
+}

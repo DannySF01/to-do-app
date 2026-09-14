@@ -1,9 +1,11 @@
 import { Folder, Plus } from "lucide-react";
 import TaskPicker from "./TaskPicker";
 import type { List } from "../types/types";
+import { t } from "i18next";
 
 interface ListPickerProps {
   lists: List[] | [];
+  label: string;
   value: string | undefined;
   onChange: (value: string | undefined) => void;
   onClose: () => void;
@@ -11,15 +13,16 @@ interface ListPickerProps {
 
 export default function ListPicker({
   lists,
+  label,
   value,
   onChange,
   onClose,
 }: ListPickerProps) {
   return (
     <TaskPicker
-      title="List"
+      title={label}
       icon={<Folder size={18} />}
-      selected={value}
+      selected={lists.find((list) => list.id === value)?.name}
       onClose={onClose}
     >
       <div className="space-y-1">
@@ -51,7 +54,9 @@ export default function ListPicker({
 
             <span className="flex-1">{list.name}</span>
 
-            {value === list.id && <span className="text-xs">Selected</span>}
+            {value === list.id && (
+              <span className="text-xs">{t("common.selected")}</span>
+            )}
           </button>
         ))}
       </div>
@@ -78,7 +83,7 @@ export default function ListPicker({
         "
       >
         <Plus size={17} />
-        New List
+        {t("lists.newListTitle")}
       </button>
     </TaskPicker>
   );

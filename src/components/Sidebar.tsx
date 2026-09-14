@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import type { List, Task, TView } from "../types/types";
 import { motion } from "motion/react";
 import ListMenu from "./ListMenu";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   open: boolean;
@@ -45,6 +46,8 @@ export default function Sidebar({
   numCompletedTasks,
 }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -106,27 +109,30 @@ export default function Sidebar({
         <div className="space-y-6">
           <section>
             <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-wide text-muted">
-              Views
+              {t("views.title")}
             </p>
 
             <nav className="space-y-0.5">
               <SidebarItem
+                id="overview"
                 active={view === "overview"}
                 icon={<LayoutDashboard />}
-                label="Overview"
+                label={t("views.overview")}
                 onClick={() => setView("overview")}
               />
               <SidebarItem
+                id="active"
                 active={view === "active"}
                 icon={<ListTodo />}
-                label="Active"
+                label={t("views.active")}
                 count={numActiveTasks}
                 onClick={() => setView("active")}
               />
               <SidebarItem
+                id="completed"
                 active={view === "completed"}
                 icon={<CheckCircle2 />}
-                label="Completed"
+                label={t("views.completed")}
                 count={numCompletedTasks}
                 onClick={() => setView("completed")}
               />
@@ -136,7 +142,7 @@ export default function Sidebar({
           <section>
             <div className="mb-2 flex items-center justify-between px-3">
               <p className="text-[10px] font-bold uppercase tracking-wide text-muted">
-                Lists
+                {t("lists.title")}
               </p>
 
               <button
@@ -150,6 +156,7 @@ export default function Sidebar({
             <nav className="space-y-0.5">
               {lists.map((list) => (
                 <SidebarItem
+                  id={list.id}
                   type="list"
                   key={list.id}
                   icon={<Folder size={18} />}
@@ -173,9 +180,10 @@ export default function Sidebar({
 
         <div className="space-y-2 border-t border-border pt-3">
           <SidebarItem
+            id="settings"
             onClick={() => setView("settings")}
             icon={<Settings />}
-            label="Settings"
+            label={t("settings.title")}
           />
 
           <button className="group flex w-full items-center gap-3 rounded-xl p-2 text-left transition hover:bg-muted/5">
@@ -186,7 +194,9 @@ export default function Sidebar({
             <div className="min-w-0 flex-1">
               <p className="truncate text-[13px] font-medium">Daniel</p>
 
-              <p className="truncate text-[11px] text-muted">Free account</p>
+              <p className="truncate text-[11px] text-muted">
+                {t("account.freeAccount")}
+              </p>
             </div>
 
             <ChevronDown className="h-3.5 w-3.5 text-muted transition group-hover:text-zinc-600" />
@@ -198,6 +208,7 @@ export default function Sidebar({
 }
 
 interface SidebarItemProps {
+  id: string;
   type?: "view" | "list";
   label: string;
   icon: React.ReactNode;
@@ -210,6 +221,7 @@ interface SidebarItemProps {
 }
 
 function SidebarItem({
+  id,
   type = "view",
   label,
   icon,
@@ -221,7 +233,7 @@ function SidebarItem({
   onRename,
 }: SidebarItemProps) {
   const isDefaultList = ["personal", "work", "study", "wishlist"].includes(
-    label.trim().toLowerCase(),
+    id.trim().toLowerCase(),
   );
 
   return (

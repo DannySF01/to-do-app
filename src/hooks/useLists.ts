@@ -1,30 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { List } from "../types/types";
-
-const DEFAULT_LISTS: List[] = [
-  {
-    id: "personal",
-    name: "Personal",
-    color: "text-violet-500",
-  },
-  {
-    id: "work",
-    name: "Work",
-    color: "text-blue-500",
-  },
-  {
-    id: "study",
-    name: "Study",
-    color: "text-amber-500",
-  },
-  {
-    id: "wishlist",
-    name: "Wishlist",
-    color: "text-rose-500",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export function useLists() {
+  const { t } = useTranslation();
+
+  const DEFAULT_LISTS = useMemo<List[]>(
+    () => [
+      {
+        id: "personal",
+        name: t("lists.default.personal"),
+        color: "text-violet-500",
+      },
+      { id: "work", name: t("lists.default.work"), color: "text-blue-500" },
+      { id: "study", name: t("lists.default.study"), color: "text-amber-500" },
+      {
+        id: "wishlist",
+        name: t("lists.default.wishlist"),
+        color: "text-rose-500",
+      },
+    ],
+    [t],
+  );
+
   const [lists, setLists] = useState<List[]>(DEFAULT_LISTS);
 
   useEffect(() => {

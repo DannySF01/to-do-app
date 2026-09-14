@@ -1,0 +1,187 @@
+{
+  "greeting": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "views": {
+    "title": "Views",
+    "overview": "Overview",
+    "active": "Active",
+    "completed": "Completed",
+    "settings": "Settings",
+    "calendar": "Calendar"
+  },
+  "newTask": "New Task",
+  "lists": {
+    "title": "Lists",
+    "create": "Create List",
+
+    "newListTitle": "New List",
+    "newListDescription": "Create a list to organize your tasks",
+    "newListPlaceholder": "List name",
+
+    "renameList": "Rename List",
+    "renameListDescription": "Choose a new name for your list.",
+
+    "deleteList": "Remove List",
+    "deleteListConfirmDescription": "Are you sure you want to remove this list? This action cannot be undone.",
+
+    "folder": "Folder",
+    "folderDescription": "Default list icon",
+
+    "default": {
+      "personal": "Personal",
+      "work": "Work",
+      "study": "Study",
+      "wishlist": "Wishlist"
+    }
+  },
+  "task": {
+    "newTask": "New Task",
+    "editTask": "Edit Task",
+    "duplicateTask": "Duplicate Task",
+    "deleteTask": "Delete Task",
+
+    "title": "Title",
+    "titlePlaceholder": "What do you need to do?",
+
+    "placeholder": "What needs to be done?",
+
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "priorityLabel": "Priority",
+    "listLabel": "List",
+    "repeatLabel": "Repeat",
+    "reminderLabel": "Remind me",
+
+    "selectList": "Select a list",
+    "noList": "No list",
+
+    "dueDate": "Due Date",
+    "dueTime": "Time",
+    "noDueDate": "No due date",
+    "addDate": "Add date",
+    "addTime": "Add time",
+
+    "reminder": {
+      "none": "None",
+      "atTime": "At time of task",
+      "5min": "5 minutes before",
+      "30min": "30 minutes before",
+      "1hour": "1 hour before",
+      "1day": "1 day before"
+    },
+
+    "markComplete": "Mark as complete",
+    "markIncomplete": "Mark as incomplete",
+    "duplicate": "Duplicate task",
+    "delete": "Delete task",
+    "edit": "Edit task",
+    "deleteConfirmTitle": "Delete this task?",
+    "deleteConfirmDescription": "This action cannot be undone.",
+    "createdAt": "Created {{date}}",
+    "updatedAt": "Updated {{date}}"
+  },
+  "emptyState": {
+    "noTasks": {
+      "title": "No tasks yet",
+      "description": "Add a task to this list to see it here."
+    },
+    "noCompleted": {
+      "title": "Nothing completed yet",
+      "description": "Finished tasks will show up here."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your preferences",
+    "back": "Back",
+    "appearance": {
+      "section": "Appearance",
+      "theme": "Theme",
+      "themeDescription": "Choose how the app looks",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": {
+      "section": "Language",
+      "label": "Language",
+      "description": "Choose your preferred language",
+      "options": {
+        "en": "English",
+        "pt": "Portuguese"
+      }
+    },
+    "notifications": {
+      "section": "Notifications",
+      "enable": "Enable Notifications",
+      "description": "Receive notifications for upcoming tasks"
+    },
+    "app": {
+      "section": "Aplication",
+      "install": "Install App",
+      "installDescription": "Install To-Do App on your device",
+      "notAvailable": "Not available",
+      "about": "About",
+      "aboutDescription": "Information about this app"
+    },
+    "dataStorage": {
+      "section": "Data & Storage",
+      "eraseData": "Erase Data",
+      "eraseDataDescription": "Permanently erase all data",
+      "erase": "Erase",
+      "storageUsage": "Storage Usage",
+      "storageUsageDescription": "Total storage used by this app"
+    },
+    "resetSettings": "Reset Settings"
+  },
+  "account": {
+    "freeAccount": "Free account",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
+  "common": {
+    "add": "Add",
+    "save": "Save",
+    "update": "Update",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "selected": "Selected",
+    "done": "Done",
+    "notSupported": "Not supported",
+    "rename": "Rename"
+  },
+  "date": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "nextWeek": "Next week",
+    "custom": "Custom date"
+  },
+  "time": {
+    "select": "Select time",
+    "remove": "Remove time"
+  },
+  "priority": {
+    "none": "No priority",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "repeat": {
+    "none": "Does not repeat",
+    "daily": "Daily",
+    "weekdays": "Weekdays",
+    "weekly": "Weekly",
+    "monthly": "Monthly"
+  }
+}

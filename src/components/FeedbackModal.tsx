@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -38,7 +39,7 @@ export default function FeedbackModal({
   title,
   message,
   type = "error",
-  confirmLabel = "Confirm",
+  confirmLabel = t("common.confirm"),
   onConfirm,
 }: FeedbackModalProps) {
   const { icon: Icon, iconClass } = config[type];
@@ -108,7 +109,7 @@ export default function FeedbackModal({
                   onClick={onClose}
                   className="rounded-xl px-4 py-2 text-sm font-medium text-muted transition hover:bg-foreground/5 hover:text-foreground"
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </button>
               )}
 

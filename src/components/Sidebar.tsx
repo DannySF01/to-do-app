@@ -181,6 +181,7 @@ export default function Sidebar({
         <div className="space-y-2 border-t border-border pt-3">
           <SidebarItem
             id="settings"
+            active={view === "settings"}
             onClick={() => setView("settings")}
             icon={<Settings />}
             label={t("settings.title")}

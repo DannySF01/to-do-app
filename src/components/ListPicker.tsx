@@ -7,6 +7,7 @@ interface ListPickerProps {
   lists: List[] | [];
   label: string;
   value: string | undefined;
+  onCreateList: () => void;
   onChange: (value: string | undefined) => void;
   onClose: () => void;
 }
@@ -15,6 +16,7 @@ export default function ListPicker({
   lists,
   label,
   value,
+  onCreateList,
   onChange,
   onClose,
 }: ListPickerProps) {
@@ -62,7 +64,7 @@ export default function ListPicker({
       </div>
 
       <button
-        onClick={() => {}}
+        onClick={onCreateList}
         type="button"
         className="
           mt-4

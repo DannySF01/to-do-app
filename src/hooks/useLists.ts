@@ -2,44 +2,57 @@ import { useEffect, useMemo, useState } from "react";
 import type { List } from "../types/types";
 import { useTranslation } from "react-i18next";
 
+interface StoredList {
+  id: string;
+  name?: string;
+  color: string;
+  isDefault?: boolean;
+}
+
+const DEFAULT_LIST_META: Omit<StoredList, "name">[] = [
+  { id: "personal", color: "text-violet-500", isDefault: true },
+  { id: "work", color: "text-blue-500", isDefault: true },
+  { id: "study", color: "text-amber-500", isDefault: true },
+  { id: "wishlist", color: "text-rose-500", isDefault: true },
+];
+
 export function useLists() {
   const { t } = useTranslation();
 
-  const DEFAULT_LISTS = useMemo<List[]>(
-    () => [
-      {
-        id: "personal",
-        name: t("lists.default.personal"),
-        color: "text-violet-500",
-      },
-      { id: "work", name: t("lists.default.work"), color: "text-blue-500" },
-      { id: "study", name: t("lists.default.study"), color: "text-amber-500" },
-      {
-        id: "wishlist",
-        name: t("lists.default.wishlist"),
-        color: "text-rose-500",
-      },
-    ],
+  const resolveName = useMemo(
+    () =>
+      (list: StoredList): List => ({
+        ...list,
+        name: list.isDefault
+          ? t(`lists.default.${list.id}`)
+          : (list.name ?? ""),
+      }),
     [t],
   );
 
-  const [lists, setLists] = useState<List[]>(DEFAULT_LISTS);
+  const defaultLists = useMemo<StoredList[]>(() => DEFAULT_LIST_META, []);
+
+  const [storedLists, setStoredLists] = useState<StoredList[]>(defaultLists);
 
   useEffect(() => {
     const stored = localStorage.getItem("lists");
-
     if (!stored) return;
 
     try {
-      const parsed: List[] = JSON.parse(stored);
-      setLists(parsed);
+      const parsed: StoredList[] = JSON.parse(stored);
+      setStoredLists(parsed);
     } catch {
       console.error("Failed to load lists");
     }
   }, []);
 
-  const persistLists = (lists: List[]) => {
-    localStorage.setItem("lists", JSON.stringify(lists));
+  const lists = useMemo(
+    () => storedLists.map(resolveName),
+    [storedLists, resolveName],
+  );
+
+  const persistLists = (updated: StoredList[]) => {
+    localStorage.setItem("lists", JSON.stringify(updated));
   };
 
   const addList = (name: string) => {
@@ -57,13 +70,13 @@ export function useLists() {
       return { success: false, reason: "exists" as const };
     }
 
-    const newList: List = {
+    const newList: StoredList = {
       id: trimmedName.toLowerCase(),
       name: trimmedName,
       color: "text-muted",
     };
 
-    setLists((prev) => {
+    setStoredLists((prev) => {
       const updated = [...prev, newList];
       persistLists(updated);
       return updated;
@@ -73,21 +86,35 @@ export function useLists() {
   };
 
   const editList = (id: string, name: string) => {
-    setLists((prev) => {
+    const target = storedLists.find((list) => list.id === id);
+    if (target?.isDefault) {
+      return { success: false, reason: "default" as const };
+    }
+
+    setStoredLists((prev) => {
       const updated = prev.map((list) =>
         list.id === id ? { ...list, name } : list,
       );
       persistLists(updated);
       return updated;
     });
+
+    return { success: true as const };
   };
 
   const removeList = (id: string) => {
-    setLists((prev) => {
+    const target = storedLists.find((list) => list.id === id);
+    if (target?.isDefault) {
+      return { success: false, reason: "default" as const };
+    }
+
+    setStoredLists((prev) => {
       const updated = prev.filter((list) => list.id !== id);
       persistLists(updated);
       return updated;
     });
+
+    return { success: true as const };
   };
 
   return {

@@ -46,7 +46,7 @@ export default function TaskMenu({
                    hover:bg-surface-hover hover:text-foreground"
         aria-label="Task options"
       >
-        <MoreVertical className="h-4 w-4" />
+        <MoreVertical size={16} />
       </button>
 
       {/* Menu */}

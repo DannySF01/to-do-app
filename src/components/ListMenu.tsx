@@ -48,16 +48,19 @@ export default function ListMenu({ onRename, onDelete }: ListMenuProps) {
         aria-label="List options"
         aria-expanded={open}
         className="
-          rounded-lg p-1.5
+          rounded-md 
           text-muted
           transition
           hover:bg-foreground/5
           hover:text-foreground
           md:opacity-0
           md:group-hover:opacity-100
+          items-center
+          flex
+          p-0.5
         "
       >
-        <MoreVertical size={17} strokeWidth={2} />
+        <MoreVertical size={16} strokeWidth={2} />
       </button>
 
       {open && (

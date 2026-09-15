@@ -21,6 +21,7 @@ interface CreateTaskProps {
   mode: "create" | "edit";
   task?: Task;
   lists: List[];
+  onCreateList?: () => void;
   onSave: (task: Task) => void;
   onClose: () => void;
 }
@@ -29,6 +30,7 @@ export default function TaskModal({
   mode,
   task,
   lists,
+  onCreateList,
   onSave,
   onClose,
 }: CreateTaskProps) {
@@ -92,6 +94,7 @@ export default function TaskModal({
           lists={lists}
           value={list}
           onChange={(e) => setList(e)}
+          onCreateList={onCreateList || (() => {})}
           onClose={() => {}}
         />
       ),

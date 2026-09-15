@@ -241,6 +241,9 @@ export default function App() {
           lists={lists}
           onSave={handleAdd}
           onClose={() => setIsCreateTaskOpen(false)}
+          onCreateList={() =>
+            setListModal({ open: true, mode: "create", list: null })
+          }
         />
       )}
 
@@ -250,6 +253,9 @@ export default function App() {
           task={editingTask}
           lists={lists}
           onSave={handleEdit}
+          onCreateList={() =>
+            setListModal({ open: true, mode: "create", list: null })
+          }
           onClose={() => setEditingTask(null)}
         />
       )}

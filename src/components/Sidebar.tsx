@@ -7,6 +7,7 @@ import {
   ListTodo,
   Menu,
   Folder,
+  CalendarDays,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { List, Task, TView } from "../types/types";
@@ -28,6 +29,7 @@ interface SidebarProps {
   tasks: Task[];
   numCompletedTasks: number;
   numActiveTasks: number;
+  numLateTasks: number;
 }
 
 export default function Sidebar({
@@ -44,6 +46,7 @@ export default function Sidebar({
   tasks,
   numActiveTasks,
   numCompletedTasks,
+  numLateTasks,
 }: SidebarProps) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -119,6 +122,15 @@ export default function Sidebar({
                 icon={<LayoutDashboard />}
                 label={t("views.overview")}
                 onClick={() => setView("overview")}
+              />
+              <SidebarItem
+                id="calendar"
+                active={view === "calendar"}
+                icon={<CalendarDays />}
+                label={t("views.calendar")}
+                onClick={() => setView("calendar")}
+                count={numLateTasks}
+                countVariant="danger"
               />
               <SidebarItem
                 id="active"
@@ -215,6 +227,7 @@ interface SidebarItemProps {
   icon: React.ReactNode;
   active?: boolean;
   count?: number;
+  countVariant?: "danger";
   color?: string;
   onClick?: () => void;
   onDelete?: () => void;
@@ -228,6 +241,7 @@ function SidebarItem({
   icon,
   active = false,
   count,
+  countVariant,
   color,
   onClick,
   onDelete,
@@ -262,8 +276,14 @@ function SidebarItem({
         {type === "list" && !isDefaultList && (
           <ListMenu onDelete={onDelete!} onRename={onRename!} />
         )}
-        {count !== undefined && (
-          <span className="text-[11px] tabular-nums text-foreground/70 bg-muted/20 px-2 py-0.5 rounded-full">
+        {count !== undefined && count > 0 && (
+          <span
+            className={`text-[11px] tabular-nums px-2 py-0.5 rounded-full ${
+              countVariant === "danger"
+                ? "bg-red-500 text-foreground"
+                : "text-foreground/70 bg-muted/20"
+            }`}
+          >
             {count}
           </span>
         )}

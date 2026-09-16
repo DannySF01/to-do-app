@@ -18,6 +18,8 @@ import { useTheme } from "./hooks/useTheme";
 import { EmptyState } from "./components/EmptyState";
 import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
+import Calendar from "./components/Calendar";
+import { groupTasksByDate } from "./utils/groupTasksByDate";
 
 export default function App() {
   const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
@@ -130,11 +132,14 @@ export default function App() {
         tasks={tasks}
         numActiveTasks={activeTasks.length}
         numCompletedTasks={completedTasks.length}
+        numLateTasks={groupTasksByDate(tasks).overdue.length}
       />
 
       <main className="min-w-0 flex-1 h-screen overflow-y-auto touch-pan-y">
         {view === "settings" ? (
           <Settings onBack={() => setView("overview")} />
+        ) : view === "calendar" ? (
+          <Calendar tasks={tasks} onToggleComplete={toggleTask} />
         ) : (
           <div className="w-full max-w-4xl space-y-6 px-6 pt-18 font-medium md:px-12 md:py-8">
             <div className="flex items-center justify-between">
@@ -264,7 +269,7 @@ export default function App() {
         active={view}
         onHome={() => setView("overview")}
         onTasks={() => setView("active")}
-        onCalendar={() => {}}
+        onCalendar={() => setView("calendar")}
         onSettings={() => setView("settings")}
         onAddTask={() => setIsCreateTaskOpen(true)}
       />

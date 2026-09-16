@@ -42,7 +42,7 @@ export default function Settings({ onBack }: SettingsProps) {
   };
 
   return (
-    <div className=" w-full max-w-3xl px-6 pb-26 pt-18 md:px-10 md:py-6">
+    <div className="w-full max-w-3xl px-6 pb-26 pt-18 md:px-10 md:py-6">
       <button
         type="button"
         onClick={onBack}

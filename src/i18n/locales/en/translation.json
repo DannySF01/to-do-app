@@ -137,6 +137,14 @@
     },
     "resetSettings": "Reset Settings"
   },
+  "calendar": {
+    "overdue": "Overdue",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This week",
+    "nextWeek": "Next week",
+    "later": "Later"
+  },
   "account": {
     "freeAccount": "Free account",
     "signIn": "Sign in",

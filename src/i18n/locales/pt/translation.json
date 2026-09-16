@@ -138,6 +138,14 @@
     },
     "resetSettings": "Repor Definições"
   },
+  "calendar": {
+    "overdue": "Atrasadas",
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "thisWeek": "Esta semana",
+    "nextWeek": "Próxima semana",
+    "later": "Mais tarde"
+  },
   "account": {
     "freeAccount": "Conta gratuita",
     "signIn": "Iniciar sessão",

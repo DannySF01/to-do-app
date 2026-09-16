@@ -10,7 +10,10 @@ interface ListModalProps {
   onClose: () => void;
   onSave: (
     name: string,
-  ) => void | { success: boolean; reason?: "empty" | "exists" };
+  ) =>
+    | void
+    | { success: true }
+    | { success: false; reason: "empty" | "exists" | "default" };
 }
 
 export default function ListModal({

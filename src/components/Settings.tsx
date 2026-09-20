@@ -17,13 +17,17 @@ import Select from "./Select";
 import { useNotifications } from "../hooks/useNotifications";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
+import { useStorageUsage } from "../hooks/useStorageUsage";
 
 interface SettingsProps {
   onBack: () => void;
+  onErase: () => void;
 }
 
-export default function Settings({ onBack }: SettingsProps) {
+export default function Settings({ onBack, onErase }: SettingsProps) {
   const { theme, setTheme } = useTheme();
+
+  const { formatted, loading } = useStorageUsage();
 
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language.split("-")[0];
@@ -148,7 +152,7 @@ export default function Settings({ onBack }: SettingsProps) {
             description={t("settings.dataStorage.eraseDataDescription")}
           >
             <button
-              onClick={() => {}}
+              onClick={onErase}
               className="text-sm rounded-lg border text-white border-border bg-red-500 px-4 py-2 font-medium"
             >
               {t("settings.dataStorage.eraseData")}
@@ -160,7 +164,9 @@ export default function Settings({ onBack }: SettingsProps) {
             description={t("settings.dataStorage.storageUsageDescription")}
           >
             <span className="flex items-center gap-2 text-muted">
-              <span className="text-sm font-medium">0 B</span>
+              <span className="text-sm font-medium">
+                {loading ? "…" : formatted}
+              </span>
             </span>
           </SettingsRow>
         </SettingsSection>

@@ -32,7 +32,7 @@ This project was built using the following technologies:
 - **Framework:** React
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
-- **Animation:** Framer Motion
+- **Animation:** Motion
 - **Icons:** Lucide React
 - **Deployment:** Vercel
 
@@ -114,7 +114,7 @@ Developing this project helped strengthen my understanding of:
 - Building reusable and modular components
 - Creating custom React hooks
 - Implementing responsive design
-- Using Framer Motion for smooth UI animations
+- Using Motion for smooth UI animations
 - Deploying a Progressive Web App (PWA)
 - Improving UI/UX design through responsive layouts
 

@@ -132,18 +132,20 @@
       "eraseData": "Erase Data",
       "eraseDataDescription": "Permanently erase all data",
       "erase": "Erase",
+      "eraseDataConfirm": "Are you sure you want to permanently erase the data for this app? This action cannot be undone.",
       "storageUsage": "Storage Usage",
       "storageUsageDescription": "Total storage used by this app"
     },
     "resetSettings": "Reset Settings"
   },
   "calendar": {
-    "overdue": "Overdue",
+    "overdue": "Overdue Tasks",
     "today": "Today",
     "tomorrow": "Tomorrow",
     "thisWeek": "This week",
     "nextWeek": "Next week",
-    "later": "Later"
+    "later": "Later",
+    "subtitle": "Your upcoming tasks"
   },
   "account": {
     "freeAccount": "Free account",

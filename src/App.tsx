@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, Plus } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
 import TaskItem from "./components/TaskItem";
@@ -20,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import i18n from "./i18n";
 import Calendar from "./components/Calendar";
 import { groupTasksByDate } from "./utils/groupTasksByDate";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function App() {
   const { tasks, addTask, editTask, toggleTask, removeTask, getFilteredTasks } =
@@ -48,8 +48,6 @@ export default function App() {
 
   const { feedback, showFeedback, hideFeedback } = useFeedback();
 
-  const [listToDelete, setListToDelete] = useState<List | null>(null);
-
   const [listModal, setListModal] = useState<{
     open: boolean;
     mode: "create" | "edit";
@@ -59,6 +57,13 @@ export default function App() {
     mode: "create",
     list: null,
   });
+
+  type PendingAction =
+    | { type: "deleteList"; list: List }
+    | { type: "eraseData" }
+    | null;
+
+  const [pendingAction, setPendingAction] = useState<PendingAction>(null);
 
   const { t } = useTranslation();
 
@@ -111,7 +116,27 @@ export default function App() {
       t("lists.deleteListConfirmDescription"),
       "warning",
     );
-    setListToDelete(list);
+    setPendingAction({ type: "deleteList", list });
+  };
+
+  const handleEraseData = () => {
+    showFeedback(
+      t("settings.dataStorage.eraseData"),
+      t("settings.dataStorage.eraseDataConfirm"),
+      "warning",
+    );
+    setPendingAction({ type: "eraseData" });
+  };
+
+  const handleFeedbackConfirm = () => {
+    if (pendingAction?.type === "deleteList") {
+      removeList(pendingAction.list.id);
+      if (selectedList === pendingAction.list.id) setSelectedList("");
+    } else if (pendingAction?.type === "eraseData") {
+      localStorage.clear();
+      window.location.reload();
+    }
+    setPendingAction(null);
   };
 
   return (
@@ -137,16 +162,17 @@ export default function App() {
 
       <main className="min-w-0 flex-1 h-screen overflow-y-auto touch-pan-y">
         {view === "settings" ? (
-          <Settings onBack={() => setView("overview")} />
+          <Settings
+            onErase={() => handleEraseData()}
+            onBack={() => setView("overview")}
+          />
         ) : view === "calendar" ? (
           <Calendar tasks={tasks} onToggleComplete={toggleTask} />
         ) : (
           <div className="w-full max-w-4xl space-y-6 px-6 pt-18 font-medium md:px-12 md:py-8">
             <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl md:text-lg tracking-tight">
-                  {welcomeMessage()}
-                </h1>
+              <div className="space-y-1">
+                <h1 className="text-2xl tracking-tight">{welcomeMessage()}</h1>
                 <p className="text-muted text-sm md:text-xs capitalize">
                   {new Date().toLocaleDateString(i18n.language, {
                     weekday: "long",
@@ -279,13 +305,7 @@ export default function App() {
         message={feedback.message}
         type={feedback.type}
         onClose={hideFeedback}
-        onConfirm={() => {
-          if (!listToDelete) return;
-          removeList(listToDelete.id);
-          if (selectedList === listToDelete.id) {
-            setSelectedList("");
-          }
-        }}
+        onConfirm={handleFeedbackConfirm}
       />
       <ListModal
         open={listModal.open}

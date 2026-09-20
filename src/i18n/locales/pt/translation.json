@@ -133,18 +133,20 @@
       "eraseData": "Apagar Dados",
       "eraseDataDescription": "Apaga permanentemente todos os dados",
       "erase": "Apagar",
+      "eraseDataConfirm": "Tem a certeza que quer apagar permanentemente os dados desta aplicação? Essa ação não pode ser desfeita.",
       "storageUsage": "Uso de Armazenamento",
       "storageUsageDescription": "Armazenamento total usado por esta aplicação"
     },
     "resetSettings": "Repor Definições"
   },
   "calendar": {
-    "overdue": "Atrasadas",
+    "overdue": "Tarefas Atrasadas",
     "today": "Hoje",
     "tomorrow": "Amanhã",
     "thisWeek": "Esta semana",
     "nextWeek": "Próxima semana",
-    "later": "Mais tarde"
+    "later": "Mais tarde",
+    "subtitle": "As tuas próximas tarefas"
   },
   "account": {
     "freeAccount": "Conta gratuita",

@@ -7,6 +7,7 @@ import {
 } from "../utils/groupTasksByDate";
 import { useLists } from "../hooks/useLists";
 import type { Task } from "../types/types";
+import { EmptyState } from "./EmptyState";
 
 interface CalendarProps {
   tasks: Task[];
@@ -36,7 +37,7 @@ export default function Calendar({ tasks, onToggleComplete }: CalendarProps) {
   function formatWeekday(iso: string): string {
     const date = parseDueDate(iso);
     const label = new Intl.DateTimeFormat(i18n.language, {
-      weekday: "short",
+      weekday: "long",
     }).format(date);
     return label.charAt(0).toUpperCase() + label.slice(1);
   }
@@ -59,44 +60,49 @@ export default function Calendar({ tasks, onToggleComplete }: CalendarProps) {
   }
 
   function dateHint(task: Task, groupKey: AgendaGroupKey): string | null {
-    if (groupKey === "today" || groupKey === "tomorrow")
-      return task.time ?? null;
-
-    if (groupKey === "overdue") {
+    if (
+      groupKey === "overdue" ||
+      groupKey === "later" ||
+      groupKey === "nextWeek"
+    ) {
       const date = parseDueDate(task.date!);
-      return new Intl.DateTimeFormat(i18n.language, {
+      const formattedDate = new Intl.DateTimeFormat(i18n.language, {
         day: "2-digit",
         month: "2-digit",
       }).format(date);
+      return task.time ? `${formattedDate} - ${task.time}` : formattedDate;
     }
 
-    // thisWeek / later
+    if (groupKey === "today" || groupKey === "tomorrow")
+      return task.time ?? null;
+
+    // thisWeek
     const weekday = formatWeekday(task.date!);
-    return task.time ? `${weekday}, ${task.time}` : weekday;
+    return task.time ? `${weekday} - ${task.time}` : weekday;
   }
 
   const hasAnyTask = GROUP_ORDER.some((key) => groups[key].length > 0);
 
-  if (!hasAnyTask) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="flex flex-col items-center justify-center gap-2 py-24 text-center"
-      >
-        <p className="text-sm font-medium text-foreground">
-          {t("emptyState.noTasks.title")}
-        </p>
-        <p className="max-w-xs text-sm text-muted">
-          {t("emptyState.noTasks.description")}
-        </p>
-      </motion.div>
-    );
-  }
-
   return (
-    <div className="space-y-8 w-full max-w-4xl px-6 pb-26 pt-18 md:px-10 md:py-6">
+    <div className="space-y-8 w-full max-w-4xl px-6 pb-26 pt-18 md:px-12 md:py-8">
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        className="mb-8"
+      >
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+          {t("views.calendar")}
+        </h1>
+
+        <p className="mt-1 text-sm text-muted">{t("calendar.subtitle")}</p>
+      </motion.div>
+      {!hasAnyTask && (
+        <EmptyState
+          title={t("emptyState.noTasks.title")}
+          description={t("emptyState.noTasks.description")}
+        />
+      )}
       {GROUP_ORDER.map((key, sectionIndex) => {
         const groupTasks = groups[key];
         if (groupTasks.length === 0) return null;
@@ -128,7 +134,7 @@ export default function Calendar({ tasks, onToggleComplete }: CalendarProps) {
               </span>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-border shadow-sm shadow-black/2 transition-shadow duration-300 hover:shadow-md hover:shadow-black/3">
+            <div className="overflow-hidden rounded-xl border border-border shadow-sm shadow-black/2 transition-shadow duration-300 hover:shadow-md hover:shadow-black/3">
               <AnimatePresence initial={false}>
                 {groupTasks.map((task, index) => {
                   const list = lists.find((l) => l.id === task.list);

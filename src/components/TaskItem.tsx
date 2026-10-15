@@ -18,6 +18,12 @@ export default function TaskItem({
   onDuplicate,
   onRemove,
 }: TaskItemProps) {
+  const hasAdditionalInfo =
+    task.date ||
+    task.time ||
+    task.priority !== "none" ||
+    task.repeat !== "no" ||
+    task.reminder;
   return (
     <motion.div
       layout
@@ -44,38 +50,40 @@ export default function TaskItem({
             )}
           </div>
 
-          <div className="flex items-center gap-4 text-[10px] capitalize">
-            {task.date && (
-              <div className="flex items-center gap-1 text-muted">
-                <CalendarDays size={12} />
-                <p className="font-mono">
-                  {new Date(task.date).toLocaleDateString()}
-                </p>
-              </div>
-            )}
-            {task.time && (
-              <div className="flex items-center gap-1 text-muted">
-                <Clock size={12} />
-                <p className="font-mono">{task.time}</p>
-              </div>
-            )}
-            {task.priority !== "none" && (
-              <div className={`${task.priority}`}>
-                <span className="flex items-center gap-1 ">
-                  <Flag size={12} />
-                  {task.priority}
-                </span>
-              </div>
-            )}
-            {task.repeat !== "no" && (
-              <div className={`${task.repeat}`}>
-                <span className="flex items-center gap-1">
-                  <Repeat2 size={12} />
-                  {task.repeat}
-                </span>
-              </div>
-            )}
-          </div>
+          {hasAdditionalInfo && (
+            <div className="flex items-center gap-4 text-[10px] capitalize">
+              {task.date && (
+                <div className="flex items-center gap-1 text-muted">
+                  <CalendarDays size={12} />
+                  <p className="font-mono">
+                    {new Date(task.date).toLocaleDateString()}
+                  </p>
+                </div>
+              )}
+              {task.time && (
+                <div className="flex items-center gap-1 text-muted">
+                  <Clock size={12} />
+                  <p className="font-mono">{task.time}</p>
+                </div>
+              )}
+              {task.priority !== "none" && (
+                <div className={`${task.priority}`}>
+                  <span className="flex items-center gap-1 ">
+                    <Flag size={12} />
+                    {task.priority}
+                  </span>
+                </div>
+              )}
+              {task.repeat !== "no" && (
+                <div className={`${task.repeat}`}>
+                  <span className="flex items-center gap-1">
+                    <Repeat2 size={12} />
+                    {task.repeat}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <TaskMenu

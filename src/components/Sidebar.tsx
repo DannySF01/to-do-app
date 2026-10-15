@@ -205,7 +205,9 @@ export default function Sidebar({
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-medium">Daniel</p>
+              <p className="truncate text-[13px] font-medium">
+                Daniel Fernandes
+              </p>
 
               <p className="truncate text-[11px] text-muted">
                 {t("account.freeAccount")}

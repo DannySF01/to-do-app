@@ -236,7 +236,7 @@ export default function App() {
                         <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
                           {completedTasks.length} {t("views.completed")}
                         </div>
-                        <div className="space-y-1 opacity-70">
+                        <div className="space-y-1">
                           {completedTasks.map((task) => (
                             <TaskItem
                               key={task.id}

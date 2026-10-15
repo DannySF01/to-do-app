@@ -43,9 +43,7 @@ export default function TaskModal({
   const [priority, setPriority] = useState<TaskPriority>(
     task?.priority || "none",
   );
-  const [list, setList] = useState<List["id"] | undefined>(
-    task?.list || undefined,
-  );
+  const [list, setList] = useState<List["id"] | undefined>(task?.list || "");
   const [repeat, setRepeat] = useState<TaskRepeat>(task?.repeat || "no");
 
   const options = [

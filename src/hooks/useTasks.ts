@@ -34,7 +34,7 @@ export function useTasks() {
   };
 
   const getFilteredTasks = (selectedList: string): Task[] => {
-    return tasks.filter((t) => t.list === selectedList || selectedList === "");
+    return tasks.filter((t) => t.list === selectedList);
   };
 
   return {

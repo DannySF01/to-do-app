@@ -5,7 +5,6 @@ import {
   Plus,
   Settings,
   ListTodo,
-  Menu,
   Folder,
   CalendarDays,
 } from "lucide-react";
@@ -60,22 +59,6 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setOpen(true)}
-        className="
-        fixed left-4 top-4 z-40
-        flex h-10 w-10 items-center justify-center
-        rounded-xl border border-border
-        bg-surface text-foreground
-        shadow-sm
-        md:hidden
-      "
-        aria-label="Open sidebar"
-      >
-        <Menu className="h-5 w-5" />
-      </button>
-
       {/* Mobile overlay outside the sidebar that closes it */}
       {open && (
         <button

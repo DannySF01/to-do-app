@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { CheckCircle2, Plus } from "lucide-react";
+import { CheckCircle2, Menu, Plus } from "lucide-react";
 import { useTasks } from "./hooks/useTasks";
 import TaskItem from "./components/TaskItem";
 import { useNotifications } from "./hooks/useNotifications";
@@ -159,21 +159,35 @@ export default function App() {
         numCompletedTasks={completedTasks.length}
         numLateTasks={groupTasksByDate(tasks).overdue.length}
       />
+      {/* Mobile sidebar button */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        className="z-40 absolute top-4 left-4
+                flex h-12 w-12 items-center justify-center
+                rounded-xl border border-border
+                bg-surface text-foreground
+                shadow-sm
+                md:hidden
+                "
+        aria-label="Open sidebar"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
 
-      <main className="min-w-0 flex-1 h-screen overflow-y-auto touch-pan-y">
+      <main className="min-w-0 flex-1 h-screen overflow-y-auto touch-pan-y py-4 md:px-4 md:py-8">
         {view === "settings" ? (
-          <Settings
-            onErase={() => handleEraseData()}
-            onBack={() => setView("overview")}
-          />
+          <Settings onErase={() => handleEraseData()} />
         ) : view === "calendar" ? (
           <Calendar tasks={tasks} onToggleComplete={toggleTask} />
         ) : (
-          <div className="w-full max-w-4xl space-y-6 px-6 pt-18 font-medium md:px-12 md:py-8">
-            <div className="flex items-center justify-between">
+          <div className="w-full max-w-4xl space-y-6 px-6 font-medium">
+            <div className="flex justify-center items-center text-center pb-4 gap-4 border-b-2 border-border md:text-start md:justify-start">
+              {/* Greeting */}
               <div className="space-y-1">
-                <h1 className="text-2xl tracking-tight">{welcomeMessage()}</h1>
-                <p className="text-muted text-sm md:text-xs capitalize">
+                <h1 className="text-xl font-semibold tracking-tight">
+                  {welcomeMessage()}
+                </h1>
+                <p className="text-muted font-medium text-xs md:text-xs capitalize">
                   {new Date().toLocaleDateString(i18n.language, {
                     weekday: "long",
                     day: "numeric",
@@ -181,10 +195,10 @@ export default function App() {
                   })}
                 </p>
               </div>
-
+              {/* New task button */}
               <button
                 onClick={() => setIsCreateTaskOpen(true)}
-                className="btn-primary p-2 hidden md:block"
+                className="btn-primary h-10 p-2 hidden md:block md:ml-auto"
               >
                 <span className="font-medium text-sm flex items-center gap-2 pr-0.5">
                   <Plus size={18} strokeWidth={2} />
@@ -192,7 +206,6 @@ export default function App() {
                 </span>
               </button>
             </div>
-
             <div className="space-y-6 pb-26 flex-1">
               <AnimatePresence mode="popLayout">
                 {filteredTasks.length === 0 ? (
@@ -210,9 +223,16 @@ export default function App() {
                         exit={{ opacity: 0 }}
                         className="space-y-1"
                       >
-                        <div className="mb-3 text-muted text-[11px] tracking-wide font-bold uppercase">
-                          {activeTasks.length} {t("views.active")}
+                        <div className="flex items-center mb-3 gap-2">
+                          <span className="capitalize">
+                            {selectedList || t("views.overview")}
+                          </span>
+                          <span className="text-muted text-sm">|</span>
+                          <div className="text-muted text-[11px] tracking-wide font-bold lowercase">
+                            {activeTasks.length} {t("views.active")}
+                          </div>
                         </div>
+
                         {activeTasks.map((task) => (
                           <TaskItem
                             key={task.id}

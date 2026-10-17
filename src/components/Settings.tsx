@@ -8,7 +8,6 @@ import {
   Monitor,
   Info,
   MonitorDown,
-  ArrowLeft,
 } from "lucide-react";
 import { useTheme } from "../hooks/useTheme";
 import Toggle from "./Toggle";
@@ -18,13 +17,13 @@ import { useNotifications } from "../hooks/useNotifications";
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useStorageUsage } from "../hooks/useStorageUsage";
+import { motion } from "motion/react";
 
 interface SettingsProps {
-  onBack: () => void;
   onErase: () => void;
 }
 
-export default function Settings({ onBack, onErase }: SettingsProps) {
+export default function Settings({ onErase }: SettingsProps) {
   const { theme, setTheme } = useTheme();
 
   const { formatted, loading } = useStorageUsage();
@@ -46,26 +45,21 @@ export default function Settings({ onBack, onErase }: SettingsProps) {
   };
 
   return (
-    <div className="w-full max-w-3xl px-6 pb-26 pt-18 md:px-10 md:py-6">
-      <button
-        type="button"
-        onClick={onBack}
-        className="h-9 w-9 mb-3 items-center justify-center rounded-lg text-muted transition-colors hover:bg-surface-hover hover:text-foreground hidden md:flex"
-        aria-label="Back"
-      >
-        <ArrowLeft size={18} />
-      </button>
-
+    <div className="w-full max-w-4xl px-6 pb-26">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight">
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        className="flex flex-col text-center pb-4 border-b-2 border-border md:border-0 md:text-start md:gap-1"
+      >
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">
           {t("settings.title")}
         </h1>
+        <p className="text-sm text-muted">{t("settings.subtitle")}</p>
+      </motion.div>
 
-        <p className="mt-1 text-sm text-muted">{t("settings.subtitle")}</p>
-      </div>
-
-      <div className="space-y-8">
+      <div className="space-y-8 pt-4">
         {/* Appearance */}
         <SettingsSection title={t("settings.appearance.section")}>
           <SettingsRow

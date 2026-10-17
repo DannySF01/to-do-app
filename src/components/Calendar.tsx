@@ -84,128 +84,129 @@ export default function Calendar({ tasks, onToggleComplete }: CalendarProps) {
   const hasAnyTask = GROUP_ORDER.some((key) => groups[key].length > 0);
 
   return (
-    <div className="space-y-8 w-full max-w-4xl px-6 pb-26 pt-18 md:px-12 md:py-8">
+    <div className="w-full max-w-4xl px-6 pb-26">
       <motion.div
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: "easeOut" }}
-        className="mb-8"
+        className="flex flex-col text-center pb-4 border-b-2 border-border md:text-start md:gap-1 md:border-0"
       >
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+        <h1 className="text-xl md:text-2xl font-semibold tracking-tight">
           {t("views.calendar")}
         </h1>
-
-        <p className="mt-1 text-sm text-muted">{t("calendar.subtitle")}</p>
+        <p className="text-sm text-muted">{t("calendar.subtitle")}</p>
       </motion.div>
-      {!hasAnyTask && (
-        <EmptyState
-          title={t("emptyState.noTasks.title")}
-          description={t("emptyState.noTasks.description")}
-        />
-      )}
-      {GROUP_ORDER.map((key, sectionIndex) => {
-        const groupTasks = groups[key];
-        if (groupTasks.length === 0) return null;
+      <div className="space-y-8 pt-4">
+        {!hasAnyTask && (
+          <EmptyState
+            title={t("emptyState.noTasks.title")}
+            description={t("emptyState.noTasks.description")}
+          />
+        )}
+        {GROUP_ORDER.map((key, sectionIndex) => {
+          const groupTasks = groups[key];
+          if (groupTasks.length === 0) return null;
 
-        return (
-          <motion.section
-            key={key}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.35,
-              delay: sectionIndex * 0.05,
-              ease: "easeOut",
-            }}
-          >
-            <div className="mb-3 flex items-center gap-2 px-1">
-              {key === "overdue" && (
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
-              )}
-              <p
-                className={`text-xs font-semibold uppercase tracking-wider ${
-                  key === "overdue" ? "text-red-500" : "text-muted"
-                }`}
-              >
-                {groupLabel(key)}
-              </p>
-              <span className="text-xs font-medium text-muted/60">
-                {groupTasks.length}
-              </span>
-            </div>
+          return (
+            <motion.section
+              key={key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.35,
+                delay: sectionIndex * 0.05,
+                ease: "easeOut",
+              }}
+            >
+              <div className="mb-3 flex items-center gap-2 px-1">
+                {key === "overdue" && (
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                )}
+                <p
+                  className={`text-xs font-semibold uppercase tracking-wider ${
+                    key === "overdue" ? "text-red-500" : "text-muted"
+                  }`}
+                >
+                  {groupLabel(key)}
+                </p>
+                <span className="text-xs font-medium text-muted/60">
+                  {groupTasks.length}
+                </span>
+              </div>
 
-            <div className="overflow-hidden rounded-xl border border-border shadow-sm shadow-black/2 transition-shadow duration-300 hover:shadow-md hover:shadow-black/3">
-              <AnimatePresence initial={false}>
-                {groupTasks.map((task, index) => {
-                  const list = lists.find((l) => l.id === task.list);
-                  const hint = dateHint(task, key);
+              <div className="overflow-hidden rounded-xl border border-border shadow-sm shadow-black/2 transition-shadow duration-300 hover:shadow-md hover:shadow-black/3">
+                <AnimatePresence initial={false}>
+                  {groupTasks.map((task, index) => {
+                    const list = lists.find((l) => l.id === task.list);
+                    const hint = dateHint(task, key);
 
-                  return (
-                    <motion.div
-                      key={task.id}
-                      layout
-                      initial={{ opacity: 0, x: -6 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 12, height: 0 }}
-                      transition={{
-                        duration: 0.25,
-                        delay: sectionIndex * 0.05 + index * 0.03,
-                        ease: "easeOut",
-                      }}
-                      whileHover={{ x: 2 }}
-                      className={`group flex items-center gap-3 px-4 py-3 transition-colors duration-200 ${
-                        index < groupTasks.length - 1
-                          ? "border-b border-border"
-                          : ""
-                      } ${
-                        key === "overdue"
-                          ? "bg-red-500/5 hover:bg-red-500/8"
-                          : "bg-surface hover:bg-surface-hover"
-                      }`}
-                    >
-                      <motion.button
-                        type="button"
-                        onClick={() => onToggleComplete(task.id)}
-                        aria-label={t("task.markComplete")}
-                        whileHover={{ scale: 1.12 }}
-                        whileTap={{ scale: 0.9 }}
+                    return (
+                      <motion.div
+                        key={task.id}
+                        layout
+                        initial={{ opacity: 0, x: -6 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 12, height: 0 }}
                         transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 20,
+                          duration: 0.25,
+                          delay: sectionIndex * 0.05 + index * 0.03,
+                          ease: "easeOut",
                         }}
-                        className="h-4 w-4 shrink-0 rounded-sm border border-border-strong transition-colors duration-200 hover:border-primary"
-                      />
+                        whileHover={{ x: 2 }}
+                        className={`group flex items-center gap-3 px-4 py-3 transition-colors duration-200 ${
+                          index < groupTasks.length - 1
+                            ? "border-b border-border"
+                            : ""
+                        } ${
+                          key === "overdue"
+                            ? "bg-red-500/5 hover:bg-red-500/8"
+                            : "bg-surface hover:bg-surface-hover"
+                        }`}
+                      >
+                        <motion.button
+                          type="button"
+                          onClick={() => onToggleComplete(task.id)}
+                          aria-label={t("task.markComplete")}
+                          whileHover={{ scale: 1.12 }}
+                          whileTap={{ scale: 0.9 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 20,
+                          }}
+                          className="h-4 w-4 shrink-0 rounded-sm border border-border-strong transition-colors duration-200 hover:border-primary"
+                        />
 
-                      <span className="flex-1 truncate text-sm text-foreground transition-colors duration-200">
-                        {task.text}
-                      </span>
-
-                      {list && (
-                        <span className="shrink-0 rounded-lg bg-surface-hover px-2 py-0.5 text-xs text-muted transition-colors duration-200 group-hover:bg-border/60">
-                          {list.name}
+                        <span className="flex-1 truncate text-sm text-foreground transition-colors duration-200">
+                          {task.text}
                         </span>
-                      )}
 
-                      {hint && (
-                        <span
-                          className={`shrink-0 text-xs tabular-nums ${
-                            key === "overdue"
-                              ? "font-medium text-red-500"
-                              : "text-muted"
-                          }`}
-                        >
-                          {hint}
-                        </span>
-                      )}
-                    </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </div>
-          </motion.section>
-        );
-      })}
+                        {list && (
+                          <span className="shrink-0 rounded-lg bg-surface-hover px-2 py-0.5 text-xs text-muted transition-colors duration-200 group-hover:bg-border/60">
+                            {list.name}
+                          </span>
+                        )}
+
+                        {hint && (
+                          <span
+                            className={`shrink-0 text-xs tabular-nums ${
+                              key === "overdue"
+                                ? "font-medium text-red-500"
+                                : "text-muted"
+                            }`}
+                          >
+                            {hint}
+                          </span>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+            </motion.section>
+          );
+        })}
+      </div>
     </div>
   );
 }
